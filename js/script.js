@@ -1,4 +1,3 @@
-
 (() => {
     'use strict'
 
@@ -348,6 +347,41 @@ $("#cvv").on("input", function () {
     } else {
         input.setCustomValidity('');
     }
+});
+
+$("#fecha-expiracion").on("input", function () {
+    let input = this;
+    let valor = input.value;
+    valor = valor.replace(/[^0-9]/, '');
+    valor = valor.replace("`", '');
+    input.value = valor;
+    let fechaActual = new Date();
+    let yearActual = fechaActual.getFullYear() - 2000;
+    let mesActual = fechaActual.getMonth() + 1;
+    let mes = "";
+    let year = "";
+
+    if (valor.length > 2){
+        valor = valor.substring(0, 2) + "/" + valor.substring(2);
+        input.value = valor;
+        mes = valor.split("/")[0];
+        year = valor.split("/")[1];
+    }
+
+    if (valor.length < 5) {
+        input.setCustomValidity('Debe ingresar al menos 4 caracteres');
+        return false;
+    } else if (year < yearActual) {
+        input.setCustomValidity('Año de expiración inválido');
+        return false;
+    } else if (mes < 1 || mes > 12) {
+        input.setCustomValidity('Mes de expiración inválido');
+        return false;
+    } else if (year == yearActual && mes < mesActual) {
+        input.setCustomValidity('Fecha de expiración inválida');
+        return false;
+    }
+    input.setCustomValidity('');
 });
 
 // Función para actualizar el resumen de la compra
