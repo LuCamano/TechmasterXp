@@ -214,3 +214,43 @@ $('#direccion').on('input', validar_direccion);
 $('#direccion').on('click', validar_direccion);
 
 $('#rutPerfil').attr('disabled', true);
+
+function aumentarCantidadCarrito(id){
+    let identificador = id.slice(-1);
+    let input = $("#cant-elem-carrito-"+identificador)[0];
+    let valor = parseInt(input.value);
+    let nuevovalor = Math.min(valor + 1, 10);
+    input.value = nuevovalor;
+};
+
+function disminuirCantidadCarrito(id){
+    let identificador = id.slice(-1);
+    let input = $("#cant-elem-carrito-"+identificador)[0];
+    let valor = parseInt(input.value);
+    let nuevovalor = Math.max(valor - 1, 1);
+    input.value = nuevovalor;
+};
+
+$(".incrementar-carrito").on('click', function () {
+    let id = this.id;
+    aumentarCantidadCarrito(id);
+});
+
+$(".decrementar-carrito").on('click', function () {
+    let id = this.id;
+    disminuirCantidadCarrito(id);
+});
+
+function aumentarCantidadProducto(){
+    let input = $("#cantidad")[0];
+    let valor = parseInt(input.value);
+    let nuevovalor = Math.min(valor + 1, 10);
+    input.value = nuevovalor;
+};
+
+function disminuirCantidadProducto(){
+    let input = $("#cantidad")[0];
+    let valor = parseInt(input.value);
+    let nuevovalor = Math.max(valor - 1, 1);
+    input.value = nuevovalor;
+};
