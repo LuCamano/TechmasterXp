@@ -20,7 +20,7 @@
 $('#password1').after("<div class='invalid-feedback' id='clave1inv'>Debe ingresar una contraseña</div>");
 $('#password2').after("<div class='invalid-feedback' id='clave2inv'>Las contraseñas no coinciden</div>");
 $('#rut').after("<div class='invalid-feedback' id='rutinv'>RUT inválido</div>");
-$('#email').after("<div class='invalid-feedback' id='emailinv'>Debe ingresar un correo electrónico</div>");
+$('#correo').after("<div class='invalid-feedback' id='emailinv'>Debe ingresar un correo electrónico</div>");
 $('#nombre').after("<div class='invalid-feedback' id='nombreinv'>Debe ingresar un nombre</div>");
 $('#apellido').after("<div class='invalid-feedback' id='apellidoinv'>Debe ingresar un apellido</div>");
 $('#telefono').after("<div class='invalid-feedback' id='telefonoinv'>Debe ingresar un teléfono</div>");
@@ -144,14 +144,13 @@ function checkRut(rut) {
 };
 
 function validar_email(){
-    const email = $("#email")[0];
+    const email = $("#correo")[0];
     const email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!email_regex.test(email.value)) {
         email.setCustomValidity('Email inválido');
         $("#emailinv").text("Email inválido");
     } else {
         email.setCustomValidity('');
-        $("#emailinv").text("Debe ingresar un correo electrónico");
     }
     if (email.value == "") {
         $("#emailinv").text("Debe ingresar un correo electrónico");
@@ -170,6 +169,8 @@ function validarTexto(texto, msgerror, textoError){
         msgerror.text(textoError);
     };
 };
+
+$('#correo').on('input', validar_email);
 
 $('#nombre').on('input', function () {
     const nombre = $("#nombre")[0];
@@ -193,11 +194,23 @@ function validar_direccion(){
         direccion.setCustomValidity('Debe ingresar al menos 10 caracteres');
         direccioninv.text("Debe ingresar al menos 10 caracteres");
         return false;
-    } else if (txt.split(" ").length < 2 && /\d/.test(txt)) {
+    } else if (txt.split(" ").length < 2) {
+        direccion.setCustomValidity('Debe ingresar una dirección válida');
+        direccioninv.text("Debe ingresar una dirección válida");
+        return false;
+    } else if (!(/\d/.test(txt))) {
+        direccion.setCustomValidity('Debe ingresar un número en la dirección');
+        direccioninv.text("Debe ingresar un número en la dirección");
+        return false;
+    } else if (!(/[a-zA-Z]/.test(txt))) {
         direccion.setCustomValidity('Debe ingresar una dirección válida');
         direccioninv.text("Debe ingresar una dirección válida");
         return false;
     }
+    direccion.setCustomValidity('');
 }
 
 $('#direccion').on('input', validar_direccion);
+$('#direccion').on('click', validar_direccion);
+
+$('#rutPerfil').attr('disabled', true);

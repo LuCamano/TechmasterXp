@@ -36,3 +36,7 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+.min-vw-50 {
+    min-width: 50vw;
+}

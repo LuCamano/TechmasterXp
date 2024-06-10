@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechMasterXP | Inicio</title>
+    <title>TechMasterXP | Perfil</title>
     <link rel="shortcut icon" href="img/torre-de-pc.png" type="image/x-icon">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
@@ -65,7 +65,7 @@
                 </div>
             </div>
         </nav>
-        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel">
+        <div class="offcanvas offcanvas-start min-vw-50" data-bs-scroll="true" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="offcanvasCarritoLabel">Carrito de compras</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -190,7 +190,108 @@
     <main class="bg-light">
         <div class="container-fluid p-4">
             <!-- Inicio de la página -->
-            
+            <h1>Perfil</h1>
+            <div class="d-flex flex-column flex-md-row gap-md-3">
+                <div class="card col-12 col-md-4 mb-3">
+                    <img class="rounded-circle border border-4 m-3" src="img/blank-profile-picture.png" alt="Foto de perfil" />
+                    <div class="card-body">
+                        <h4 class="card-title fw-bolder">Juanito Perez</h4>
+                    </div>
+                </div>
+                <div class="card col-12 col-md-8 mb-3">
+                    <form class="card-body needs-validation" method="post" novalidate>
+                        <div class="row">
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="Juanito" required>
+                            </div>
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="apellido" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="apellido" name="apellido" value="Perez" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="rutPerfil" class="form-label">Rut</label>
+                                <input type="text" class="form-control" id="rutPerfil" name="rut" value="12.345.678-9" maxlength="9" required>
+                            </div>
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="correo" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="correo" name="correo" value="Juanito@perez.com" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="direccion" name="direccion" value="Calle 123 Comuna" required>
+                                <div id="map"></div>
+                            </div>
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" value="987654321" required>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </form>
+                </div>
+            </div>
+            <h2>Historial de compras</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha del pedido</th>
+                            <th scope="col">Entregado</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01/01/2021</td>
+                            <td>01/02/2021</td>
+                            <td>RTX 3050</td>
+                            <td>1</td>
+                            <td>$0.00</td>
+                            <td>Procesando</td>
+                        </tr>
+                        <tr>
+                            <td>01/01/2021</td>
+                            <td>01/02/2021</td>
+                            <td>RTX 3050</td>
+                            <td>1</td>
+                            <td>$0.00</td>
+                            <td>En transito</td>
+                        </tr>
+                        <tr>
+                            <td>01/01/2021</td>
+                            <td>01/02/2021</td>
+                            <td>RTX 3050</td>
+                            <td>1</td>
+                            <td>$0.00</td>
+                            <td>En transito</td>
+                        </tr>
+                        <tr>
+                            <td>01/01/2021</td>
+                            <td>01/02/2021</td>
+                            <td>RTX 3050</td>
+                            <td>1</td>
+                            <td>$0.00</td>
+                            <td>Entregado</td>
+                        </tr>
+                        <tr>
+                            <td>01/01/2021</td>
+                            <td>01/02/2021</td>
+                            <td>RTX 3050</td>
+                            <td>1</td>
+                            <td>$0.00</td>
+                            <td>Entregado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <!-- Fin de la pagina -->
         </div>
     </main>
@@ -220,7 +321,14 @@
             </div>
         </div>
     </footer>
+    <!-- Script de bootstrap -->
     <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- Script de la pagina -->
     <script src="js/script.js"></script>
+    <!-- llamado a google maps -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXNCKw3k07Z0QLw2GOuPjajvS0psHVCX0&region=CL&language=es&libraries=places&callback=initAutocomplete"
+    defer></script>
+    <!-- Script de google maps -->
+    <script src="js/google.maps.script.js"></script>
 </body>
 </html>
