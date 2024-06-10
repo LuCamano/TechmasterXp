@@ -25,6 +25,8 @@ $('#nombre').after("<div class='invalid-feedback' id='nombreinv'>Debe ingresar u
 $('#apellido').after("<div class='invalid-feedback' id='apellidoinv'>Debe ingresar un apellido</div>");
 $('#telefono').after("<div class='invalid-feedback' id='telefonoinv'>Debe ingresar un teléfono</div>");
 $('#direccion').after("<div class='invalid-feedback' id='direccioninv'>Debe ingresar una dirección</div>");
+$('#tarjeta').after("<div class='invalid-feedback' id='err_nro_tarjeta'>Número de tarjeta inválido</div>");
+
 
 function validar_clave(){
     const clave1 = $("#password1")[0];
@@ -257,3 +259,145 @@ function disminuirCantidadProducto(){
 
 $("#boton-incrementar").on('click', aumentarCantidadProducto);
 $("#boton-decrementar").on('click', disminuirCantidadProducto);
+
+
+function validar_telefono(){
+    const telefono = $("#telefono")[0];
+    const telefonoinv = $("#telefonoinv");
+    let txt = telefono.value;
+
+    txt = txt.replace(/[^0-9]/, '');
+    telefono.value = txt;
+
+    if (txt.length < 9) {
+        telefono.setCustomValidity('Debe ingresar al menos 9 caracteres');
+        telefonoinv.text("Debe ingresar al menos 9 caracteres");
+        return false;
+    } else if (!(/^\d+$/.test(txt))) {
+        telefono.setCustomValidity('Debe ingresar solo números');
+        telefonoinv.text("Debe ingresar solo números");
+        return false;
+    }
+    telefono.setCustomValidity('');
+}
+
+$("#telefono").on("input", validar_telefono);
+
+
+
+function fValidarTarjeta(){
+    codigo = $("#tarjeta").val().replace('-', '');
+    input = $("#tarjeta")[0];
+    error = $("#err_nro_tarjeta");
+    VISA = /^4[0-9]{3}-?[0-9]{4}-?[0-9]{4}-?[0-9]{4}$/;
+    MASTERCARD = /^5[1-5][0-9]{2}-?[0-9]{4}-?[0-9]{4}-?[0-9]   {4}$/;
+    AMEX = /^3[47][0-9-]{16}$/;
+    CABAL = /^(6042|6043|6044|6045|6046|5896){4}[0-9]{12}$/;
+    NARANJA =   /^(589562|402917|402918|527571|527572|0377798|0377799)[0-9]*$/;
+
+    $("#err_nro_tarjeta").html("");
+    if(luhn(codigo)){
+        if(VISA.test(codigo)){
+            input.setCustomValidity('');
+        } else if(MASTERCARD.test(codigo)){
+            input.setCustomValidity('');
+        } else if(AMEX.test(codigo)){
+            input.setCustomValidity('');
+        } else if(CABAL.test(codigo)){
+            input.setCustomValidity('');
+        } else if(NARANJA.test(codigo)){
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Número de tarjeta inválido');
+            error.text("Número de tarjeta inválido");
+        }
+    } else {
+        input.setCustomValidity('Número de tarjeta inválido');
+        error.text("Número de tarjeta inválido");
+    }
+}
+function luhn(value) {
+    // Accept only digits, dashes or spaces
+    if (/[^0-9-\s]+/.test(value)) return false;
+    // The Luhn Algorithm. It's so pretty.
+    let nCheck = 0, bEven = false;
+    value = value.replace(/\D/g, "");
+    for (var n = value.length - 1; n >= 0; n--) {
+        var cDigit = value.charAt(n),
+        nDigit = parseInt(cDigit, 10);
+        if (bEven && (nDigit *= 2) > 9) nDigit -= 9; nCheck +=  nDigit; bEven = !bEven;
+    }
+    return (nCheck % 10) == 0;
+}
+
+$("#tarjeta").on("input", fValidarTarjeta);
+
+
+$("#boton-pagar").on("click", function () {
+    document.getElementById("metodo-pago").dispatchEvent(new Event('submit'));
+    document.getElementById("datos-facturacion").dispatchEvent(new Event('submit'));
+});
+
+$("#cvv").on("input", function () {
+    input = this;
+    valor = input.value;
+    valor = valor.replace(/[^0-9]/, '');
+    input.value = valor;
+    if (valor.length < 3) {
+        input.setCustomValidity('Debe ingresar al menos 3 caracteres');
+    } else {
+        input.setCustomValidity('');
+    }
+});
+
+// Función para actualizar el resumen de la compra
+// const productos = [
+//     { nombre: "Producto 1", precio: 10.00, cantidad: 2 },
+//     { nombre: "Producto 2", precio: 15.00, cantidad: 1 },
+//     { nombre: "Producto 3", precio: 5.00, cantidad: 3 }
+// ];
+// const cantidadProductos = document.getElementById("cantidad-productos");
+// const total = document.getElementById("total");
+
+// function actualizarResumen() {
+//     let totalProductos = 0;
+//     let totalPrecio = 0.00;
+
+//     productos.forEach(producto => {
+//         totalProductos += producto.cantidad;
+//         totalPrecio += producto.precio * producto.cantidad;
+//     });
+
+//     cantidadProductos.textContent = totalProductos;
+//     total.textContent = totalPrecio.toFixed(2);
+// }
+
+// actualizarResumen();
+
+
+// Funcion para generar números de tarjeta de crédito de prueba
+// function generateCardNumber(prefix, length) {
+//     let cardNumber = prefix;
+//     while (cardNumber.length < (length - 1)) {
+//         cardNumber += Math.floor(Math.random() * 10);
+//     }
+
+//     // Calculate check digit using Luhn algorithm
+//     let sum = 0;
+//     let shouldDouble = true;
+//     for (let i = cardNumber.length - 1; i >= 0; i--) {
+//         let digit = parseInt(cardNumber.charAt(i));
+//         if (shouldDouble) {
+//             digit *= 2;
+//             if (digit > 9) {
+//                 digit -= 9;
+//             }
+//         }
+//         sum += digit;
+//         shouldDouble = !shouldDouble;
+//     }
+//     let checkDigit = (10 - (sum % 10)) % 10;
+//     cardNumber += checkDigit.toString();
+
+//     return cardNumber;
+// }
