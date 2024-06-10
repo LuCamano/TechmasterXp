@@ -242,15 +242,18 @@ $(".decrementar-carrito").on('click', function () {
 });
 
 function aumentarCantidadProducto(){
-    let input = $("#cantidad")[0];
+    let input = $("#cantidad-producto")[0];
     let valor = parseInt(input.value);
     let nuevovalor = Math.min(valor + 1, 10);
     input.value = nuevovalor;
 };
 
 function disminuirCantidadProducto(){
-    let input = $("#cantidad")[0];
+    let input = $("#cantidad-producto")[0];
     let valor = parseInt(input.value);
     let nuevovalor = Math.max(valor - 1, 1);
     input.value = nuevovalor;
 };
+
+$("#boton-incrementar").on('click', aumentarCantidadProducto);
+$("#boton-decrementar").on('click', disminuirCantidadProducto);
