@@ -435,3 +435,42 @@ $("#fecha-expiracion").on("input", function () {
 
 //     return cardNumber;
 // }
+
+var deleteModal = $('#deleteModal')[0];
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var productId = button.getAttribute('data-id');
+        var productName = button.getAttribute('data-name');
+        
+        var modalTitle = deleteModal.querySelector('.modal-title');
+        var modalBodySpan = deleteModal.querySelector('.modal-body #productName');
+        var deleteForm = deleteModal.querySelector('#deleteForm');
+        var tipoObjeto = button.getAttribute('data-tipo');
+
+        if (tipoObjeto == 'Usuario'){
+            modalTitle.textContent = 'Eliminar usuario';
+            deleteForm.action = '/delete-user/' + productId + '/';
+        } else if (tipoObjeto == 'Producto'){
+            modalTitle.textContent = 'Eliminar producto';
+            deleteForm.action = '/delete-product/' + productId + '/';
+        } else if (tipoObjeto == 'Marca'){
+            modalTitle.textContent = 'Eliminar marca';
+            deleteForm.action = '/delete-brand/' + productId + '/';
+        }
+        modalBodySpan.textContent = productName;
+    });
+
+var productsModal = $('#productsModal')[0];
+    productsModal.addEventListener('show.bs.modal', function (event) {
+        let boton = event.relatedTarget;
+        let productos = JSON.parse(boton.getAttribute('data-products'));
+
+        let modalBody = productsModal.querySelector('.modal-body');
+        modalBody.textContent = "";
+
+        productos.forEach(producto => {
+            let p = document.createElement('p');
+            p.textContent = producto["nombre"] + " x" + producto["cantidad"];
+            modalBody.appendChild(p);
+        });
+    });
