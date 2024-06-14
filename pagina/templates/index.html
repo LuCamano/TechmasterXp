@@ -1,0 +1,115 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+    <div class="row">
+                <div class="col-12 col-md-8 mb-3">
+                    <h2>Destacado</h2>
+                    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+                        <ul class="carousel-indicators">
+                            <button data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true"
+                                aria-label="First slide"></button>
+                            <button data-bs-target="#carouselId" data-bs-slide-to="1" aria-label="Second slide"></button>
+                            <button data-bs-target="#carouselId" data-bs-slide-to="2" aria-label="Third slide"></button>
+                        </ul>
+                        <div class="carousel-inner carrusel mh-100 border rounded" role="listbox">
+                            <div class="carousel-item active">
+                                <img src="{% static 'img/banner prueba 1.jpg'%}" class="w-100 d-block"
+                                    alt="First slide" />
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'img/rtx 3070 ti.jpg'%}" class="w-100 d-block"
+                                    alt="Second slide" />
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'img/banner prueba 1.jpg'%}" class="w-100 d-block"
+                                    alt="Third slide" />
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <h2>Oferta</h2>
+                    <a href="{% url "producto" %}"><img src="{% static 'img/banner m_2.jpeg'%}" class="w-100 mb-3" alt="3070"></a>
+                    <a href="{% url "producto" %}"><img src="{% static 'img/motherboard banner.jpg'%}" class="w-100 mb-3" alt="motherboard"></a>
+                </div>
+    </div>
+    <div class="row">
+                <h2>Lo más vendido</h2>
+                <div class="overflow-x-auto">
+                    <div class="d-flex gap-3">
+                        <div class="card col-8 col-md-3">
+                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
+                            <div class="card-body">
+                                <h4 class="card-title">RTX 3050</h4>
+                                <p class="card-text">Tarjeta Gráfica</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
+                            </div>
+                        </div>
+                        <div class="card col-8 col-md-3">
+                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
+                            <div class="card-body">
+                                <h4 class="card-title">RTX 3050</h4>
+                                <p class="card-text">Tarjeta Gráfica</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
+                            </div>
+                        </div>
+                        <div class="card col-8 col-md-3">
+                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
+                            <div class="card-body">
+                                <h4 class="card-title">RTX 3050</h4>
+                                <p class="card-text">Tarjeta Gráfica</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
+                            </div>
+                        </div>
+                        <div class="card col-8 col-md-3">
+                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
+                            <div class="card-body">
+                                <h4 class="card-title">RTX 3050</h4>
+                                <p class="card-text">Tarjeta Gráfica</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
+                            </div>
+                        </div>
+                        <div class="card col-8 col-md-3">
+                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
+                            <div class="card-body">
+                                <h4 class="card-title">RTX 3050</h4>
+                                <p class="card-text">Tarjeta Gráfica</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
+                            </div>
+                        </div>
+                        <div class="card col-8 col-md-3">
+                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
+                            <div class="card-body">
+                                <h4 class="card-title">RTX 3050</h4>
+                                <p class="card-text">Tarjeta Gráfica</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </div>
+{% endblock %}
