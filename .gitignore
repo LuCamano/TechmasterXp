@@ -1,1 +1,6 @@
 venv/
+usuarios/__pycache__/
+usuarios/migrations/__pycache__/
+pagina/__pycache__/
+pagina/migrations/__pycache__/
+core/__pycache__/
