@@ -16,28 +16,38 @@ class UsuarioManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(correo=correo, password=password, **extra_fields)
     
-    def formatear_rut(self, rut: str):
+    def formatear_rut(self, rut: str) -> str:
         cuerpo_valido = "1234567890"
         dv_valido = cuerpo_valido + "K"
-        rut = rut.upper()
-        rut = rut.replace(".", "")
-        rut = rut.replace("-", "")
+        
+        # Convertir a mayúsculas y eliminar puntos y guiones
+        rut = rut.upper().replace(".", "").replace("-", "")
+        
         if not rut:
             raise ValueError("El rut es obligatorio")
-        if 8 <= len(rut) <= 9:
-            cuerpo = rut[:-2]
-            digito_v = rut[-1]
-            for i in range(len(cuerpo)):
-                charac = cuerpo[i]
-                if charac not in cuerpo_valido:
-                    raise ValueError("Rut inválido")
-                if i%3 == 0 and i != 0:
-                    cuerpo = cuerpo[:-(i+1)] + "." + cuerpo[-(i+1):]
-            if digito_v not in dv_valido:
-                raise ValueError("Dígito verificador inválido")
-            return cuerpo + "-" + digito_v
-        else:
-            raise ValueError("El rut debe tener entre 8 y 12 caracteres")
+        
+        if not 8 <= len(rut) <= 9:
+            raise ValueError("El rut debe tener entre 8 y 9 caracteres")
+        
+        cuerpo = rut[:-1]
+        digito_v = rut[-1]
+        
+        # Validar el cuerpo del RUT
+        if not all(char in cuerpo_valido for char in cuerpo):
+            raise ValueError("Rut inválido")
+        
+        # Validar el dígito verificador
+        if digito_v not in dv_valido:
+            raise ValueError("Dígito verificador inválido")
+        
+        # Formatear el cuerpo con puntos
+        cuerpo_formateado = ""
+        for i, char in enumerate(reversed(cuerpo)):
+            if i != 0 and i % 3 == 0:
+                cuerpo_formateado = "." + cuerpo_formateado
+            cuerpo_formateado = char + cuerpo_formateado
+        
+        return f"{cuerpo_formateado}-{digito_v}"
 
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
@@ -47,7 +57,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     apellido = models.CharField("Apellido", max_length=100, blank=False, null=False)
     direccion1 = models.CharField("Dirección", help_text="(Calle, nro, comuna)", max_length=200, blank=True, null=False, default="")
     direccion2 = models.CharField("Dirección 2", help_text="(Departamento, casa, etc.)", max_length=200, blank=True, null=True, default="")
-    telefono = PhoneNumberField(verbose_name='Teléfono', blank=True, null=True)
+    telefono = PhoneNumberField(verbose_name='Teléfono', blank=True, null=True, default="")
     imagen = models.ImageField("Imagen", upload_to="usuarios", blank=True, null=True)
     is_staff = models.BooleanField("Empleado", default=False)
     is_superuser = models.BooleanField("Superusuario", default=False)
@@ -60,3 +70,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.correo
+    
+    def get_full_name(self):
+        return f"{self.nombre} {self.apellido}"
