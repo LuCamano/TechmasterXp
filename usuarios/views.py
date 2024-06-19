@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login, logout
-from .forms import LoginForm
+from .forms import LoginForm, RegistroForm
 
 # Create your views here.
 def login_view(request):
@@ -18,4 +18,11 @@ def logout_view(request):
     return redirect("index")
 
 def registro(request):
-    return render(request, "registro.html",{})
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+        return redirect('registro')
+    form = RegistroForm()
+    return render(request, "registro.html",{'form': form})
