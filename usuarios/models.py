@@ -57,7 +57,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     apellido = models.CharField("Apellido", max_length=100, blank=False, null=False)
     direccion1 = models.CharField("Dirección", help_text="(Calle, nro, comuna)", max_length=200, blank=True, null=False, default="")
     direccion2 = models.CharField("Dirección 2", help_text="(Departamento, casa, etc.)", max_length=200, blank=True, null=True, default="")
-    telefono = PhoneNumberField(verbose_name='Teléfono', blank=True, null=True, default="")
+    telefono = PhoneNumberField(verbose_name='Teléfono', blank=True, null=True, default="", region="CL")
     imagen = models.ImageField("Imagen", upload_to="usuarios", blank=True, null=True)
     is_staff = models.BooleanField("Empleado", default=False)
     is_superuser = models.BooleanField("Superusuario", default=False)
