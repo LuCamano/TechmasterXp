@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-6#68$a18@g8$xac=onem7t!1za*ebk#d1%t!=t+_5vao*e45xc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -131,12 +131,12 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-LOGIN_REDIRECT_URL = "pagina:index"
+LOGIN_REDIRECT_URL = "index"
 
-LOGOUT_REDIRECT_URL = "pagina:index"
+LOGOUT_REDIRECT_URL = "index"
 
 AUTH_USER_MODEL = "usuarios.Usuario"
 
 MEDIA_URL = "/media/"
 
-LOGIN_URL = "usuarios:login"
+LOGIN_URL = "login"

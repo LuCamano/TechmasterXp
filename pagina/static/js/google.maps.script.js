@@ -7,7 +7,7 @@ function initAutocomplete() {
     });
 
     // Create the search box and link it to the UI element.
-    var input = document.getElementById('direccion');
+    var input = document.getElementById('direccion1');
     var searchBox = new google.maps.places.SearchBox(input);
     // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input); // determina la posicion
 

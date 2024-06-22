@@ -37,8 +37,8 @@
                 </div>
                 <div class="row">
                     <div class="mb-3 col-12 col-md-6">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" value="{{ request.user.direccion1 }}" required>
+                        <label for="direccion1" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccion1" name="direccion1" value="{{ request.user.direccion1 }}" required>
                         <div id="map"></div>
                     </div>
                     <div class="mb-3 col-12 col-md-6">
@@ -114,5 +114,5 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXNCKw3k07Z0QLw2GOuPjajvS0psHVCX0&region=CL&language=es&libraries=places&callback=initAutocomplete"
     defer></script>
     <!-- Script de google maps -->
-    <script src="js/google.maps.script.js"></script>
+    <script src="{% static 'js/google.maps.script.js'%}"></script>
 {% endblock %}

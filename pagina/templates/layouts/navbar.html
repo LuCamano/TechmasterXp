@@ -19,7 +19,7 @@
                 </div>
             </form>
             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                {% if request.user.is_authenticated %}
+                {% if request.user.is_authenticated and request.user.is_staff %}
                     <li class="nav-item">
                         <a class="nav-link text-center" href="{% url "admin" %}"><i class="bi bi-tools"> Admin</i></a>
                     </li>

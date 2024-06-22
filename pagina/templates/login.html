@@ -7,6 +7,18 @@
 {% block content %}
     <div class="row">
         <div class="col-12 col-md-6 mx-auto">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %} alert-dismissible fade show" role="alert">
+                    <strong>
+                        {% if message.tags == 'success' %}
+                            <i class="bi bi-info-circle-fill"></i>
+                        {% else %}
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        {% endif %}
+                    </strong> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
             <div class="card">
                 <div class="card-header text-center">
                     <h3>Iniciar Sesión</h3>

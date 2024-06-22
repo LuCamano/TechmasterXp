@@ -1,5 +1,33 @@
-<!-- llamado a google maps -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXNCKw3k07Z0QLw2GOuPjajvS0psHVCX0&region=CL&language=es&libraries=places&callback=initAutocomplete"
-defer></script>
-<!-- Script de google maps -->
-<script src="js/google.maps.script.js"></script>
+{% extends "layouts/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Registrarse{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-6 mx-auto">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %} alert-dismissible fade show" role="alert">
+                    <strong>
+                        {% if message.tags == 'success' %}
+                            <i class="bi bi-info-circle-fill"></i>
+                        {% else %}
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        {% endif %}
+                    </strong> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>Registrarse</h3>
+                </div>
+                {% crispy form %}
+                <div class="card-footer">
+                    <p>¿Ya tienes una cuenta? <a href="{% url "login" %}">Iniciar Sesión</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

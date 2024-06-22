@@ -23,7 +23,8 @@ $('#correo').after("<div class='invalid-feedback' id='emailinv'>Debe ingresar un
 $('#nombre').after("<div class='invalid-feedback' id='nombreinv'>Debe ingresar un nombre</div>");
 $('#apellido').after("<div class='invalid-feedback' id='apellidoinv'>Debe ingresar un apellido</div>");
 $('#telefono').after("<div class='invalid-feedback' id='telefonoinv'>Debe ingresar un teléfono</div>");
-$('#direccion').after("<div class='invalid-feedback' id='direccioninv'>Debe ingresar una dirección</div>");
+$('#direccion1').after("<div class='invalid-feedback' id='direccioninv'>Debe ingresar una dirección</div>");
+$('#direccion1').after("<div id='map'></div>");
 $('#tarjeta').after("<div class='invalid-feedback' id='err_nro_tarjeta'>Número de tarjeta inválido</div>");
 
 
@@ -211,8 +212,8 @@ function validar_direccion(){
     direccion.setCustomValidity('');
 }
 
-$('#direccion').on('input', validar_direccion);
-$('#direccion').on('click', validar_direccion);
+$('#direccion1').on('input', validar_direccion);
+$('#direccion1').on('click', validar_direccion);
 
 $('#rutPerfil').attr('disabled', true);
 
