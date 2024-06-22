@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
+import os
+from PIL import Image
 # Create your models here.
 class UsuarioManager(BaseUserManager):
     def create_user(self, correo, password=None, **extra_fields):
@@ -58,7 +60,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     direccion1 = models.CharField("Dirección", help_text="(Calle, nro, comuna)", max_length=200, blank=True, null=False, default="")
     direccion2 = models.CharField("Dirección 2", help_text="(Departamento, casa, etc.)", max_length=200, blank=True, null=True, default="")
     telefono = PhoneNumberField(verbose_name='Teléfono', blank=True, null=True, default="", region="CL")
-    imagen = models.ImageField("Imagen", upload_to="usuarios", blank=True, null=True)
+    imagen = models.ImageField("Imagen", upload_to="usuarios/", blank=True, null=True)
     is_staff = models.BooleanField("Empleado", default=False)
     is_superuser = models.BooleanField("Superusuario", default=False)
 
@@ -73,3 +75,45 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     
     def get_full_name(self):
         return f"{self.nombre} {self.apellido}"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.imagen and os.path.exists(self.imagen.path):
+            with Image.open(self.imagen.path) as img:
+                ancho, alto = img.size
+
+                if ancho > alto:
+                    # La imagen es mas ancha que alta
+                    nuevo_alto = 1280
+                    nuevo_ancho = int((ancho/alto) * nuevo_alto)
+                    img = img.resize((nuevo_ancho, nuevo_alto))
+                    img.save(self.imagen.path)
+                elif alto > ancho:
+                    # La imagen es mas alta que ancha
+                    nuevo_ancho = 1280
+                    nuevo_alto = int((alto/ancho) * nuevo_ancho)
+                    img = img.resize((nuevo_ancho, nuevo_alto))
+                    img.save(self.imagen.path)
+                else:
+                    # La imagen es cuadrada
+                    img.thumbnail((300, 300))
+                    img.save(self.imagen.path)
+
+            # El recorte de la imagen final
+            with Image.open(self.imagen.path) as img:
+                ancho, alto = img.size
+
+                if ancho > alto:
+                    left = (ancho - alto) / 2
+                    top = 0
+                    right = (ancho + alto) / 2
+                    bottom = alto
+
+                else:
+                    left = 0
+                    top = (alto - ancho) / 2
+                    right = ancho
+                    bottom = (alto + ancho) / 2
+
+                img = img.crop((left, top, right, bottom))
+                img.save(self.imagen.path)

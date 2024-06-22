@@ -7,10 +7,14 @@
 {% block content %}
     <h1>Perfil</h1>
     <div class="d-flex flex-column flex-md-row gap-md-3">
-        <div class="card col-12 col-md-4 mb-3">
-            <img class="rounded-circle border border-4 m-3" src="{% static 'img/blank-profile-picture.png'%}" alt="Foto de perfil" />
-            <div class="card-body">
-                <h4 class="card-title fw-bolder">{{ request.user.get_full_name }}</h4>
+        <div class="col-12 col-md-4 mb-3">
+            <div class="card">
+                <div class="p-3">
+                    <img class="rounded-circle w-100 border border-4 object-fit-contain" src="{% if request.user.imagen %}{{ request.user.imagen.url }}{% else %}{% static 'img/blank-profile-picture.png'%}{% endif %}" alt="Foto de perfil" />
+                </div>
+                    <div class="card-body">
+                    <h4 class="card-title fw-bolder">{{ request.user.get_full_name }}</h4>
+                </div>
             </div>
         </div>
         <div class="card col-12 col-md-8 mb-3">

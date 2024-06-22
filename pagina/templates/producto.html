@@ -1,254 +1,58 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechMasterXP | Inicio</title>
-    <link rel="shortcut icon" href="img/torre-de-pc.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="css/estilos.css">
-    <script src="js/jquery-3.7.1.min.js"></script>
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="index.html"><img src="img/torre-de-pc.png" height="50" alt="Logo"></a>
-                <a class="navbar-brand" href="index.html">TechMasterXP</a>
-                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavId">
-                    <form class="d-flex my-2 ms-auto my-lg-0">
-                        <div class="input-group">
-                            <input class="form-control ms-sm-2" type="text" placeholder="Búsqueda" />
-                            <button class="btn btn-dark" type="submit">
-                                Buscar
-                            </button>
-                        </div>
-                    </form>
-                    <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-center" href="admin.html"><i class="bi bi-tools"> Admin</i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-center" data-bs-toggle="offcanvas" href="#offcanvasCarrito" role="button" aria-controls="offcanvasCarrito"><i class="bi bi-cart"> Carrito</i></a>
-                        </li>
-                        <li class="nav-item">
-                            <div class="dropstart">
-                                <a class="nav-link text-center" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><i class="bi bi-person-circle">
-                                        Perfil</i></a>
-                                <div class="dropdown-menu p-3" style="min-width: 300px;">
-                                    <div class="mt-3">
-                                        <h3 class="text-center">Iniciar Sesión</h3>
-                                    </div>
-                                    <form class="px-4 py-3" method="post">
-                                        <div class="mb-3">
-                                            <label for="exampleDropdownFormEmail1" class="form-label">Correo electrónico</label>
-                                            <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="correo@ejemplo.com">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleDropdownFormPassword1" class="form-label">Contraseña</label>
-                                            <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="contraseña">
-                                            <a href="#">¿Olvidaste tu contraseña?</a>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-                                    </form>
-                                    <p class="dropdown-item-text">¿No tienes cuenta?<a href="registro.html"> Registrarse</a></p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="offcanvas offcanvas-start min-vw-50" data-bs-scroll="true" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasCarritoLabel">Carrito de compras</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <div class="contenido-carrito">
-                    <div class="overflow-y-scroll mh-100">
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <a href="producto.html"><img src="img/3050.jpg" class="w-100 h-100 object-fit-scale object-fit-lg-fill rounded" alt="3050"></a>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body d-flex flex-column flex-md-row">
-                                        <div class="col-12 col-md-8">
-                                            <a class="text-decoration-none" href="producto.html"><h5 class="card-title">RTX 3050</h5></a>
-                                            <p class="card-text">Tarjeta Gráfica</p>
-                                            <p class="card-text">Precio: $0.00</p>
-                                        </div>
-                                        <div class="d-flex flex-md-column col-7 col-md-4 justify-content-between">
-                                            <button id="boton-incrementar-1" class="btn btn-warning incrementar-carrito">+</button>
-                                            <input id="cant-elem-carrito-1" class="form-control text-center mx-auto" type="number" value="1" readonly>
-                                            <button id="boton-decrementar-1" class="btn btn-warning decrementar-carrito">-</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <a href="producto.html"><img src="img/3050.jpg" class="w-100 h-100 object-fit-scale object-fit-lg-fill rounded" alt="3050"></a>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body d-flex flex-column flex-md-row">
-                                        <div class="col-12 col-md-8">
-                                            <a class="text-decoration-none" href="producto.html"><h5 class="card-title">RTX 3050</h5></a>
-                                            <p class="card-text">Tarjeta Gráfica</p>
-                                            <p class="card-text">Precio: $0.00</p>
-                                        </div>
-                                        <div class="d-flex flex-md-column col-7 col-md-4 justify-content-between">
-                                            <button id="boton-incrementar-2" class="btn btn-warning incrementar-carrito">+</button>
-                                            <input id="cant-elem-carrito-2" class="form-control text-center mx-auto" type="number" value="1" readonly>
-                                            <button id="boton-decrementar-2" class="btn btn-warning decrementar-carrito">-</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <a href="producto.html"><img src="img/3050.jpg" class="w-100 h-100 object-fit-scale object-fit-lg-fill rounded" alt="3050"></a>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body d-flex flex-column flex-md-row">
-                                        <div class="col-12 col-md-8">
-                                            <a class="text-decoration-none" href="producto.html"><h5 class="card-title">RTX 3050</h5></a>
-                                            <p class="card-text">Tarjeta Gráfica</p>
-                                            <p class="card-text">Precio: $0.00</p>
-                                        </div>
-                                        <div class="d-flex flex-md-column col-7 col-md-4 justify-content-between">
-                                            <button id="boton-incrementar-3" class="btn btn-warning incrementar-carrito">+</button>
-                                            <input id="cant-elem-carrito-3" class="form-control text-center mx-auto" type="number" value="1" readonly>
-                                            <button id="boton-decrementar-3" class="btn btn-warning decrementar-carrito">-</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <a href="producto.html"><img src="img/3050.jpg" class="w-100 h-100 object-fit-scale object-fit-lg-fill rounded" alt="3050"></a>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body d-flex flex-column flex-md-row">
-                                        <div class="col-12 col-md-8">
-                                            <a class="text-decoration-none" href="producto.html"><h5 class="card-title">RTX 3050</h5></a>
-                                            <p class="card-text">Tarjeta Gráfica</p>
-                                            <p class="card-text">Precio: $0.00</p>
-                                        </div>
-                                        <div class="d-flex flex-md-column col-7 col-md-4 justify-content-between">
-                                            <button id="boton-incrementar-4" class="btn btn-warning incrementar-carrito">+</button>
-                                            <input id="cant-elem-carrito-4" class="form-control text-center mx-auto" type="number" value="1" readonly>
-                                            <button id="boton-decrementar-4" class="btn btn-warning decrementar-carrito">-</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between p-2">
-                        <p class="my-auto">Total: $0.00</p>
-                        <a class="btn btn-outline-success" href="checkout.html">Pagar</a>
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %}ASUS ROG Nvidia GeForce RTX3050{% endblock %}
+
+{% block content %}
+    <h1 class="mt-3">ASUS ROG Nvidia GeForce RTX3050</h1>
+    <div class="row mb-5">
+        <div class="col-12 col-md-4 me-auto">
+            <img src="{% static 'img/3050.jpg'%}" alt="ASUS ROG Nvidia GeForce RTX3050" class="object-fit-contain w-100">
+        </div>
+        <div class="col-12 col-md-4 mx-auto">
+            <p class="fs-5">Precio: $400.000</p>
+            <p class="fs-5">Stock: 10</p>
+            <p class="fs-5">Descripción: 8 GB GDDR6, 128-bit</p>
+        </div>
+        <div class="col-12 col-md-4 ms-auto">
+            <form class="d-flex flex-column justify-content-center">
+                <div class="mb-3 col-6 justify-self-center">
+                    <label for="cantidad-producto" class="form-label">Cantidad</label>
+                    <div class="input-group rounded-pill">
+                        <button class="btn btn-outline-info rounded-start-pill" type="button" id="boton-decrementar">-</button>
+                        <input name="cantidad-producto" type="number" class="form-control" id="cantidad-producto" value="1" readonly>
+                        <button class="btn btn-outline-info rounded-end-pill" type="button" id="boton-incrementar">+</button>
                     </div>
                 </div>
-            </div>
+                <button type="submit" class="w-50 btn btn-outline-dark">Agregar al carrito</button>
+            </form>
         </div>
-    </header>
-    <main class="bg-light">
-        <div class="container-fluid p-4">
-            <!-- Inicio de la página -->
-            <h1 class="mt-3">ASUS ROG Nvidia GeForce RTX3050</h1>
-            <div class="row mb-5">
-                <div class="col-12 col-md-4 me-auto">
-                    <img src="img/3050.jpg" alt="ASUS ROG Nvidia GeForce RTX3050" class="object-fit-contain w-100">
-                </div>
-                <div class="col-12 col-md-4 mx-auto">
-                    <p class="fs-5">Precio: $400.000</p>
-                    <p class="fs-5">Stock: 10</p>
-                    <p class="fs-5">Descripción: 8 GB GDDR6, 128-bit</p>
-                </div>
-                <div class="col-12 col-md-4 ms-auto">
-                    <form class="d-flex flex-column justify-content-center">
-                        <div class="mb-3 col-6 justify-self-center">
-                            <label for="cantidad-producto" class="form-label">Cantidad</label>
-                            <div class="input-group rounded-pill">
-                                <button class="btn btn-outline-info rounded-start-pill" type="button" id="boton-decrementar">-</button>
-                                <input name="cantidad-producto" type="number" class="form-control" id="cantidad-producto" value="1" readonly>
-                                <button class="btn btn-outline-info rounded-end-pill" type="button" id="boton-incrementar">+</button>
-                            </div>
-                        </div>
-                        <button type="submit" class="w-50 btn btn-outline-dark">Agregar al carrito</button>
-                    </form>
-                </div>
-            </div>
-            <div class="col-12">
-                <p class="h3">Especificaciones técnicas</p>
-                <p class="fs-5">
-                    Bus Standard: PCI Express 4.0<br>
-                    OpenGL: OpenGL®4.6<br>
-                    Memoria de Video: GDDR6 8GB<br>
-                    Engine Clock: OC Mode - 1860 MHz (Boost Clock) Gaming Mode - 1830 MHz (Boost Clock)<br>
-                    CUDA Core: 2560<br>
-                    Memory Speed: 14 Gbps<br>
-                    Memory Interface: 128-bit<br>
-                    Resolution: Digital Max Resolution 7680 x 4320<br>
-                    Interface: Yes x 1 (Native HDMI 2.1) Yes x 3 (Native DisplayPort 1.4a)<br>
-                    HDCP Support: Yes (2.3)<br>
-                    Maximum Display Support: 4<br>
-                    NVlink/ Crossfire Support: No<br>
-                    Recommended PSU: 650W<br>
-                    Power Connectors: 8 pin x 1<br>
-                    Accessories: 1 x ROG Velcro Hook & Loop<br>
-                    Software: ASUS GPU Tweak II & Drivers: please download all software from the support site.<br>
-                    Dimensions: 11.81 " x 5.16 " x 2.13 " Inch 30 x 13.1 x 5.4 Centimeter<br>
-                    Slot: 2.7 slot<br>
-                    Note: * All specifications are subject to change without notice. Please check with your supplier for exact offers. Products may not be available in all markets.<br>
-                    * PCB color and bundled software versions are subject to change without notice.<br>
-                    * Brand and product names mentioned are trademarks of their respective companies.
-                </p>
-            </div>
-            <!-- Fin de la pagina -->
-        </div>
-    </main>
-    <footer>
-        <div class="container-fluid bg-dark text-light text-justify p-3">
-            <div class="row">
-                <div class="col-12 col-md-4 mx-auto p-3">
-                    <div class="d-flex">
-                        <img src="img/torre-de-pc.png" height="30" alt="Logo">
-                        <h4 class="d-block">TechMasterXP</h4>
-                    </div>
-                    <p>¿Quiénes somos?</p>
-                    <p>Somos una tienda de componentes de pc en la que podrás encontrar todos los componentes para tu pc al mejor precio.</p>
-                </div>
-                <div class="col-12 col-md-4 mx-auto p-3">
-                    <h4>Enlaces</h4>
-                    <ul>
-                        <li><a href="index.html">Inicio</a></li>
-                        <li><a href="registro.html">Registro</a></li>
-                    </ul>
-                </div>
-                <div class="col-12 col-md-4 mx-auto p-3">
-                    <h4>Contacto</h4>
-                    <p><i class="bi bi-envelope-at"></i> Correo: <a href="mailto:contactoTechmasterStore@gmail.com">contactoTechmasterStore@gmail.com</a></p>
-                    <p><i class="bi bi-telephone"></i> Teléfono: <a href="tel:+525555555555">55 5555 5555</a></p>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
-</body>
-</html>
+    </div>
+    <div class="col-12">
+        <p class="h3">Especificaciones técnicas</p>
+        <p class="fs-5">
+            Bus Standard: PCI Express 4.0<br>
+            OpenGL: OpenGL®4.6<br>
+            Memoria de Video: GDDR6 8GB<br>
+            Engine Clock: OC Mode - 1860 MHz (Boost Clock) Gaming Mode - 1830 MHz (Boost Clock)<br>
+            CUDA Core: 2560<br>
+            Memory Speed: 14 Gbps<br>
+            Memory Interface: 128-bit<br>
+            Resolution: Digital Max Resolution 7680 x 4320<br>
+            Interface: Yes x 1 (Native HDMI 2.1) Yes x 3 (Native DisplayPort 1.4a)<br>
+            HDCP Support: Yes (2.3)<br>
+            Maximum Display Support: 4<br>
+            NVlink/ Crossfire Support: No<br>
+            Recommended PSU: 650W<br>
+            Power Connectors: 8 pin x 1<br>
+            Accessories: 1 x ROG Velcro Hook & Loop<br>
+            Software: ASUS GPU Tweak II & Drivers: please download all software from the support site.<br>
+            Dimensions: 11.81 " x 5.16 " x 2.13 " Inch 30 x 13.1 x 5.4 Centimeter<br>
+            Slot: 2.7 slot<br>
+            Note: * All specifications are subject to change without notice. Please check with your supplier for exact offers. Products may not be available in all markets.<br>
+            * PCB color and bundled software versions are subject to change without notice.<br>
+            * Brand and product names mentioned are trademarks of their respective companies.
+        </p>
+    </div>
+{% endblock %}
