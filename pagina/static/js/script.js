@@ -290,7 +290,7 @@ function fValidarTarjeta(){
     input = $("#tarjeta")[0];
     error = $("#err_nro_tarjeta");
     VISA = /^4[0-9]{3}-?[0-9]{4}-?[0-9]{4}-?[0-9]{4}$/;
-    MASTERCARD = /^5[1-5][0-9]{2}-?[0-9]{4}-?[0-9]{4}-?[0-9]   {4}$/;
+    MASTERCARD = /^5[1-5][0-9]{2}-?[0-9]{4}-?[0-9]{4}-?[0-9]{4}$/;
     AMEX = /^3[47][0-9-]{16}$/;
     CABAL = /^(6042|6043|6044|6045|6046|5896){4}[0-9]{12}$/;
     NARANJA =   /^(589562|402917|402918|527571|527572|0377798|0377799)[0-9]*$/;
@@ -437,6 +437,7 @@ $("#fecha-expiracion").on("input", function () {
 //     return cardNumber;
 // }
 
+// Funcion para editar el contenido del modal de eliminación
 var deleteModal = $('#deleteModal')[0];
     deleteModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
@@ -461,6 +462,7 @@ var deleteModal = $('#deleteModal')[0];
         modalBodySpan.textContent = productName;
     });
 
+// Funcion para editar el contenido del modal de productos del pedido
 var productsModal = $('#productsModal')[0];
     productsModal.addEventListener('show.bs.modal', function (event) {
         let boton = event.relatedTarget;
