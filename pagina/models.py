@@ -3,9 +3,8 @@ from django.db import models
 # Create your models here.
 class Producto(models.Model):
     nombre = models.CharField("Nombre", max_length=200)
-    fabricante = models.ForeignKey("pagina.Fabricante", verbose_name="Marca", on_delete=models.PROTECT)
     precio = models.IntegerField("Precio")
-    descripcion = models.TextField("Descripción")
+    descripcion = models.ImageField("Descripción", upload_to="productos/descripciones", null=True, blank=True)
     imagen = models.ImageField("Imagen", upload_to="productos", null=True, blank=True)
 
     def __str__(self):
@@ -25,8 +24,19 @@ class Fabricante(models.Model):
         verbose_name = "Fabricante"
         verbose_name_plural = "Fabricantes"
 
+class Marca(models.Model):
+    nombre = models.CharField("Nombre", max_length=70, blank=False)
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Marca"
+        verbose_name_plural = "Marcas"
+
 class Tarjeta_Grafica(Producto):
-    memoria = models.PositiveIntegerField("Memoria")
+    memoria = models.PositiveIntegerField("Memoria", help_text="En GB")
+    fabricante = models.ForeignKey("pagina.Fabricante", verbose_name="Fabricante", on_delete=models.PROTECT, null=True)
     gpu = models.ForeignKey("pagina.GPU", verbose_name="GPU", on_delete=models.PROTECT)
     bus = models.CharField("Bus", max_length=50)
     perfil = models.CharField("Perfil", max_length=50)
@@ -43,6 +53,140 @@ class Tarjeta_Grafica(Producto):
 
 class GPU(models.Model):
     nombre = models.CharField("Nombre", max_length=100, blank=False)
+    marca = models.ForeignKey("pagina.Marca", verbose_name="Marca", on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return self.nombre
+    
+    class Meta:
+        verbose_name = "GPU"
+        verbose_name_plural = "GPUs"
+
+class Procesador(Producto):
+    marca = models.ForeignKey("pagina.Marca", verbose_name="Marca", on_delete=models.PROTECT, null=True)
+    nucleos = models.PositiveIntegerField("Núcleos")
+    hilos = models.PositiveIntegerField("Hilos")
+    frecuencia = models.FloatField("Frecuencia", help_text="En GHz")
+    turbo = models.FloatField("Turbo", help_text="En GHz")
+    cache = models.FloatField("Cache", help_text="En MB")
+    socket = models.ForeignKey("pagina.Socket", verbose_name="Socket", on_delete=models.PROTECT)
+    tdp = models.PositiveIntegerField("TDP", help_text="En W")
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Procesador"
+        verbose_name_plural = "Procesadores"
+
+class PlacaBase(Producto):
+    formato = models.CharField("Formato", max_length=50)
+    socket = models.ForeignKey("pagina.Socket", verbose_name="Socket", on_delete=models.PROTECT)
+    ram = models.PositiveIntegerField("RAM", help_text="En GB")
+    slots_ram = models.PositiveIntegerField("Slots de RAM")
+    slots_m2 = models.PositiveIntegerField("Slots M.2")
+    slots_sata = models.PositiveIntegerField("Slots SATA")
+    puertos_usb = models.PositiveIntegerField("Puertos USB")
+    puertos_video = models.PositiveIntegerField("Puertos de video")
+    puertos_red = models.PositiveIntegerField("Puertos de red")
+    puertos_audio = models.PositiveIntegerField("Puertos de audio")
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Placa Base"
+        verbose_name_plural = "Placas Base"
+
+class SSD(Producto):
+    capacidad = models.PositiveIntegerField("Capacidad", help_text="En GB")
+    lectura = models.PositiveIntegerField("Lectura", help_text="En MB/s")
+    escritura = models.PositiveIntegerField("Escritura", help_text="En MB/s")
+    formato = models.CharField("Formato", max_length=50)
+    interfaz = models.CharField("Interfaz", max_length=50)
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "SSD"
+        verbose_name_plural = "SSDs"
+
+class HDD(Producto):
+    capacidad = models.PositiveIntegerField("Capacidad", help_text="En GB")
+    lectura = models.PositiveIntegerField("Lectura", help_text="En MB/s")
+    escritura = models.PositiveIntegerField("Escritura", help_text="En MB/s")
+    formato = models.CharField("Formato", max_length=50)
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Disco Duro"
+        verbose_name_plural = "Discos Duros"
+
+class MemoriaRam(Producto):
+    capacidad = models.PositiveIntegerField("Capacidad", help_text="En GB")
+    frecuencia = models.PositiveIntegerField("Frecuencia", help_text="En MHz")
+    latencia = models.CharField("Latencia", max_length=50)
+    formato = models.CharField("Formato", max_length=50)
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Memoria"
+        verbose_name_plural = "Memorias"
+
+class FuenteAlimentacion(Producto):
+    potencia = models.PositiveIntegerField("Potencia", help_text="En W")
+    eficiencia = models.CharField("Eficiencia", max_length=50)
+    certificacion = models.CharField("Certificación", max_length=50)
+    modular = models.BooleanField("Modular")
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Fuente de Alimentación"
+        verbose_name_plural = "Fuentes de Alimentación"
+
+class Gabinete(Producto):
+    tam_placa = models.CharField("Tamaño máximo de la placa", max_length=50, default="ATX")
+    fuente = models.CharField("Ubicación fuente", max_length=50, default="Inferior")
+    vent_inc = models.CharField("Ventiladores incluidos", max_length=100, default="No posee")
+    esp_vent_front = models.CharField("Espacios para ventiladores frontales", max_length=100, default="3 x 120 mm")
+    esp_vent_top = models.CharField("Espacios para ventiladores superiores", max_length=100, default="2 x 120 mm")
+    esp_vent_back = models.CharField("Espacios para ventiladores traseros", max_length=100, default="1 x 120 mm")
+    esp_vent_bottom = models.CharField("Espacios para ventiladores inferiores", max_length=100, default="No posee")
+    puertos = models.CharField("Puertos", max_length=100, blank=True)
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Gabinete"
+        verbose_name_plural = "Gabinetes"
+
+class Cooler(Producto):
+    socket = models.ForeignKey("pagina.Socket", verbose_name="Socket", on_delete=models.PROTECT)
+    rpm = models.PositiveIntegerField("RPM")
+    flujo = models.PositiveIntegerField("Flujo de aire", help_text="En CFM")
+    ruido = models.PositiveIntegerField("Ruido", help_text="En dBA")
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Cooler"
+        verbose_name_plural = "Coolers"
+
+class Socket(models.Model):
+    nombre = models.CharField("Nombre", max_length=50)
+
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Socket"
+        verbose_name_plural = "Sockets"
