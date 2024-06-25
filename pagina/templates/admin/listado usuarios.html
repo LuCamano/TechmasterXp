@@ -1,0 +1,139 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Administración{% endblock %}
+
+{% block content %}
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-fill mb-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a href="{% url "listado_productos" %}" class="nav-link" id="productos-tab"
+                type="button" aria-selected="false">
+                Productos
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a href="{% url "listado_usuarios" %}" class="nav-link active" id="usuarios-tab"
+                type="button" aria-selected="true">
+                Usuarios
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a href="{% url "listado_pedidos" %}" class="nav-link" id="pedidos-tab"
+                type="button" aria-selected="false">
+                Pedidos
+            </a>
+        </li>
+    </ul>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h3>Listado de usuarios</h3>
+                <a href="agregar usuario.html" class="btn btn-success rounded-4 p-2">Agregar usuario</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive rounded">
+                    <table
+                        class="table table-striped table-hover table-borderless table-primary align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Rut</th>
+                                <th>Correo</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Dirección</th>
+                                <th>Teléfono</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            <tr class="table-primary">
+                                <td>12.345.678-9</td>
+                                <td>juanito@perez.com</td>
+                                <td>Juan</td>
+                                <td>Pérez</td>
+                                <td>Calle Falsa 123</td>
+                                <td>55555555</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="submit" class="btn btn-warning rounded-3 p-3"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button type="submit" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal" data-id="{{ user.id }}"
+                                            data-name="Juan Pérez" data-tipo="Usuario"
+                                            class="btn btn-danger rounded-3 p-3"><i
+                                                class="bi bi-trash3"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td>12.345.678-9</td>
+                                <td>roberto@gomez.com</td>
+                                <td>Roberto</td>
+                                <td>Gomez</td>
+                                <td>Calle Falsa 123</td>
+                                <td>55555555</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="submit" class="btn btn-warning rounded-3 p-3"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button type="submit" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal" data-id="{{ user.id }}"
+                                            data-name="Roberto Gomez" data-tipo="Usuario"
+                                            class="btn btn-danger rounded-3 p-3"><i
+                                                class="bi bi-trash3"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td>12.345.678-9</td>
+                                <td>juanito@perez.com</td>
+                                <td>Juan</td>
+                                <td>Pérez</td>
+                                <td>Calle Falsa 123</td>
+                                <td>55555555</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="submit" class="btn btn-warning rounded-3 p-3"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button type="submit" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal" data-id="{{ user.id }}"
+                                            data-name="Juan Pérez" data-tipo="Usuario"
+                                            class="btn btn-danger rounded-3 p-3"><i
+                                                class="bi bi-trash3"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar <span id="productName"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="deleteForm" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from .models import Producto
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
+from django.contrib.auth import get_user_model
 
+usuario = get_user_model()
 # Create your views here.
 def get_subclasses(cls):
     subclasses = set()
@@ -30,17 +34,29 @@ def index(request):
     return render(request, "index.html",{'productos':productos_recientes})
 
 @login_required
-def admin(request):
-    return render(request, "admin.html",{})
+def listado_productos(request):
+    producto_subclasses = get_subclasses(Producto)
+    productos = []
 
+    for subclass in producto_subclasses:
+        productos.extend(subclass.objects.all())
+
+    return render(request, "admin/listado productos.html", {'productos':productos})
+
+class Listado_usuarios(LoginRequiredMixin, ListView):
+    model = usuario
+    template_name = "admin/listado usuarios.html"
+
+@login_required
+def listado_pedidos(request):
+    return render(request, "admin/listado pedidos.html", {})
+
+@login_required
 def agregar_usuario(request):
-    return render(request, "agregar usuario.html",{})
+    return render(request, "admin/agregar usuario.html",{})
 
 def checkout(request):
     return render(request, "checkout.html",{})
-
-def nuevo_producto(request):
-    return render(request, "nuevo producto.html",{})
 
 @login_required
 def perfil(request):

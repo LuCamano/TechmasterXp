@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 # Create your models here.
 class Producto(models.Model):
@@ -13,6 +15,9 @@ class Producto(models.Model):
     
     @property
     def tipo(self):
+        '''
+        Devuelve el nombre del tipo de producto.
+        '''
         return self.__class__._meta.verbose_name
 
     class Meta:
@@ -122,6 +127,7 @@ class HDD(Producto):
     lectura = models.PositiveIntegerField("Lectura", help_text="En MB/s")
     escritura = models.PositiveIntegerField("Escritura", help_text="En MB/s")
     formato = models.CharField("Formato", max_length=50)
+    rpm = models.PositiveIntegerField("RPM")
 
     def __str__(self):
         return self.nombre

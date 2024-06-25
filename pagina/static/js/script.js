@@ -439,6 +439,7 @@ $("#fecha-expiracion").on("input", function () {
 
 // Funcion para editar el contenido del modal de eliminación
 var deleteModal = $('#deleteModal')[0];
+if (deleteModal) {
     deleteModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
         var productId = button.getAttribute('data-id');
@@ -460,10 +461,11 @@ var deleteModal = $('#deleteModal')[0];
             deleteForm.action = '/delete-brand/' + productId + '/';
         }
         modalBodySpan.textContent = productName;
-    });
+    });};
 
 // Funcion para editar el contenido del modal de productos del pedido
 var productsModal = $('#productsModal')[0];
+if (productsModal){
     productsModal.addEventListener('show.bs.modal', function (event) {
         let boton = event.relatedTarget;
         let productos = JSON.parse(boton.getAttribute('data-products'));
@@ -476,4 +478,4 @@ var productsModal = $('#productsModal')[0];
             p.textContent = producto["nombre"] + " x" + producto["cantidad"];
             modalBody.appendChild(p);
         });
-    });
+    });};

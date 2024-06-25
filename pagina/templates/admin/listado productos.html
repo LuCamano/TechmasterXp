@@ -1,0 +1,121 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Administración{% endblock %}
+
+{% block content %}
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-fill mb-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a href="{% url "listado_productos" %}" class="nav-link active" id="productos-tab"
+                type="button" aria-selected="true">
+                Productos
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a href="{% url "listado_usuarios" %}" class="nav-link" id="usuarios-tab"
+                type="button" aria-selected="false">
+                Usuarios
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a href="{% url "listado_pedidos" %}" class="nav-link" id="pedidos-tab"
+                type="button" aria-selected="false">
+                Pedidos
+            </a>
+        </li>
+    </ul>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h3>Listado de productos</h3>
+                <a href="nuevo producto.html" class="btn btn-success rounded-4 p-2">Agregar producto</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive rounded">
+                    <table
+                        class="table table-striped table-hover table-borderless table-primary align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            <tr class="table-primary">
+                                <td><img src="{% static 'img/3050.jpg'%}" class="object-fit-scale" height="100"
+                                        width="100" alt="Imagen producto"></td>
+                                <td>RTX 3050 RogStrix</td>
+                                <td>ASUS</td>
+                                <td>Tarjeta Gráfica</td>
+                                <td>$1000</td>
+                                <td>30</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="submit" class="btn btn-warning rounded-3 p-3"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button type="submit" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal" data-id="{{ product.id }}"
+                                            data-name="RTX 3050 RogStrix" data-tipo="Producto"
+                                            class="btn btn-danger rounded-3 p-3"><i
+                                                class="bi bi-trash3"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td><img src="{% static 'img/i7 9700.jpg'%}" class="object-fit-scale" height="100"
+                                        width="100" alt="Imagen producto"></td>
+                                <td>Core i7 9700</td>
+                                <td>INTEL</td>
+                                <td>Procesador</td>
+                                <td>$1000</td>
+                                <td>30</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-warning rounded-3 p-3"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                            data-id="{{ product.id }}" data-name="Core i7 9700"
+                                            data-tipo="Producto" class="btn btn-danger rounded-3 p-3"><i
+                                                class="bi bi-trash3"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar <span id="productName"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="deleteForm" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
