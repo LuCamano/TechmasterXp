@@ -13,6 +13,7 @@ class Producto(models.Model):
     class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
+        abstract = True
 
 class Fabricante(models.Model):
     nombre = models.CharField("Nombre", max_length=100, blank=False)
@@ -82,7 +83,6 @@ class Procesador(Producto):
 class PlacaBase(Producto):
     formato = models.CharField("Formato", max_length=50)
     socket = models.ForeignKey("pagina.Socket", verbose_name="Socket", on_delete=models.PROTECT)
-    ram = models.PositiveIntegerField("RAM", help_text="En GB")
     slots_ram = models.PositiveIntegerField("Slots de RAM")
     slots_m2 = models.PositiveIntegerField("Slots M.2")
     slots_sata = models.PositiveIntegerField("Slots SATA")

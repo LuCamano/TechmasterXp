@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from .models import Producto
 from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 def index(request):
-    return render(request, "index.html",{})
+    productos = Producto.objects.all()
+    return render(request, "index.html",{'productos':productos})
 
 @login_required
 def admin(request):
