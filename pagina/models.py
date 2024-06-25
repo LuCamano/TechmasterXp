@@ -6,10 +6,15 @@ class Producto(models.Model):
     precio = models.IntegerField("Precio")
     descripcion = models.ImageField("Descripción", upload_to="productos/descripciones", null=True, blank=True)
     imagen = models.ImageField("Imagen", upload_to="productos", null=True, blank=True)
+    fecha_agregado = models.DateTimeField("Fecha de agregado", auto_now_add=True)
 
     def __str__(self):
         return self.nombre
     
+    @property
+    def tipo(self):
+        return self.__class__._meta.verbose_name
+
     class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"

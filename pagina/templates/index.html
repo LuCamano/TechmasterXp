@@ -41,74 +41,30 @@
                 </div>
                 <div class="col-12 col-md-4 mb-3">
                     <h2>Oferta</h2>
-                    <a href="{% url "producto" %}"><img src="{% static 'img/banner m_2.jpeg'%}" class="w-100 mb-3" alt="3070"></a>
-                    <a href="{% url "producto" %}"><img src="{% static 'img/motherboard banner.jpg'%}" class="w-100 mb-3" alt="motherboard"></a>
+                    <a href="producto/1"><img src="{% static 'img/banner m_2.jpeg'%}" class="w-100 mb-3" alt="3070"></a>
+                    <a href="producto/1"><img src="{% static 'img/motherboard banner.jpg'%}" class="w-100 mb-3" alt="motherboard"></a>
                 </div>
     </div>
     <div class="row">
-                <h2>Lo más vendido</h2>
+                <h2>Últimos agregados</h2>
                 <div class="overflow-x-auto">
                     <div class="d-flex gap-3">
-                        <div class="card col-8 col-md-3">
-                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
-                            <div class="card-body">
-                                <h4 class="card-title">RTX 3050</h4>
-                                <p class="card-text">Tarjeta Gráfica</p>
+                        {% for producto in productos %}
+                            <div class="card col-8 col-md-6 col-lg-3">
+                                <img class="card-img-top p-2 w-100 rounded-top object-fit-scale object-fit-lg-contain" src="{{ producto.imagen.url }}" alt="Title" />
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ producto.nombre }}</h4>
+                                </div>
+                                <div class="card-footer">
+                                    <p class="card-text fw-bold">{{ producto.tipo }}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="fs-4 fw-medium">Precio:</p>
+                                        <p class="fs-4 fw-medium">${{ producto.precio }}</p>
+                                    </div>
+                                    <a href="{% url "producto" producto.id %}" class="btn btn-outline-info d-block">Ver más</a>
+                                </div>
                             </div>
-                            <div class="card-footer">
-                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
-                            </div>
-                        </div>
-                        <div class="card col-8 col-md-3">
-                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
-                            <div class="card-body">
-                                <h4 class="card-title">RTX 3050</h4>
-                                <p class="card-text">Tarjeta Gráfica</p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
-                            </div>
-                        </div>
-                        <div class="card col-8 col-md-3">
-                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
-                            <div class="card-body">
-                                <h4 class="card-title">RTX 3050</h4>
-                                <p class="card-text">Tarjeta Gráfica</p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
-                            </div>
-                        </div>
-                        <div class="card col-8 col-md-3">
-                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
-                            <div class="card-body">
-                                <h4 class="card-title">RTX 3050</h4>
-                                <p class="card-text">Tarjeta Gráfica</p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
-                            </div>
-                        </div>
-                        <div class="card col-8 col-md-3">
-                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
-                            <div class="card-body">
-                                <h4 class="card-title">RTX 3050</h4>
-                                <p class="card-text">Tarjeta Gráfica</p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
-                            </div>
-                        </div>
-                        <div class="card col-8 col-md-3">
-                            <img class="card-img-top w-100 rounded-top object-fit-scale object-fit-lg-fill" src="{% static 'img/3050.jpg'%}" alt="Title" />
-                            <div class="card-body">
-                                <h4 class="card-title">RTX 3050</h4>
-                                <p class="card-text">Tarjeta Gráfica</p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{% url "producto" %}" class="btn btn-outline-info d-block">Ver más</a>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
     </div>
