@@ -46,26 +46,26 @@
                 </div>
     </div>
     <div class="row">
-                <h2>Últimos agregados</h2>
-                <div class="overflow-x-auto">
-                    <div class="d-flex gap-3">
-                        {% for producto in productos %}
-                            <div class="card col-8 col-md-6 col-lg-3">
-                                <img class="card-img-top p-2 w-100 rounded-top object-fit-scale object-fit-lg-contain" src="{{ producto.imagen.url }}" alt="Title" />
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ producto.nombre }}</h4>
-                                </div>
-                                <div class="card-footer">
-                                    <p class="card-text fw-bold">{{ producto.tipo }}</p>
-                                    <div class="d-flex justify-content-between">
-                                        <p class="fs-4 fw-medium">Precio:</p>
-                                        <p class="fs-4 fw-medium">${{ producto.precio }}</p>
-                                    </div>
-                                    <a href="{% url "producto" producto.id %}" class="btn btn-outline-info d-block">Ver más</a>
-                                </div>
+        <h2>Últimos agregados</h2>
+        <div class="overflow-x-auto">
+            <div class="d-flex gap-3">
+                {% for producto in productos %}
+                    <div class="card col-8 col-md-6 col-lg-3">
+                        <img class="card-img-top p-2 w-100 rounded-top object-fit-scale object-fit-lg-contain" src="{{ producto.imagen.url }}" alt="Title" />
+                        <div class="card-body">
+                            <h4 class="card-title">{{ producto.nombre }}</h4>
+                        </div>
+                        <div class="card-footer">
+                            <p class="card-text fw-bold">{{ producto.tipo }}</p>
+                            <div class="d-flex justify-content-between">
+                                <p class="fs-4 fw-medium">Precio:</p>
+                                <p class="fs-4 fw-medium">${{ producto.precio }}</p>
                             </div>
-                        {% endfor %}
+                            <a href="{% url "producto" producto.id %}" class="btn btn-outline-info d-block">Ver más</a>
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}
