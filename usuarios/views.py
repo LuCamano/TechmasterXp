@@ -1,7 +1,10 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import login, logout
-from .forms import LoginForm, RegistroForm
+from django.contrib.auth import login, logout, get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import LoginForm, RegistroForm, RegistroAdminForm
 from django.contrib import messages
+from django.views.generic import CreateView
 
 # Create your views here.
 def login_view(request):
@@ -34,3 +37,16 @@ def registro(request):
     else:
         form = RegistroForm()
     return render(request, "registro.html", {"form": form})
+
+def perfil(request):
+    return render(request, "perfil.html", {})
+
+class AgregarUsuario(LoginRequiredMixin, CreateView):
+    model = get_user_model()
+    form_class = RegistroAdminForm
+    template_name = "admin/formulario agregar admin.html"
+    success_url = "listado_usuarios"
+    
+    def get_context_data(self, **kwargs):
+        kwargs["tipo"] = "usuario"
+        return super().get_context_data(**kwargs)

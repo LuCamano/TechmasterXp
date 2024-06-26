@@ -189,7 +189,7 @@ $('#apellido').on('input', function () {
 });
 
 function validar_direccion(){
-    const direccion = $("#direccion")[0];
+    const direccion = $("#direccion1")[0];
     const direccioninv = $("#direccioninv");
     let txt = direccion.value;
     if (txt.length < 10) {
