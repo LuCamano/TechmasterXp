@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from .forms import *
 
 usuario = get_user_model()
@@ -42,6 +43,11 @@ def listado_productos(request):
     for subclass in producto_subclasses:
         productos.extend(subclass.objects.all())
 
+    productos = sorted(
+        productos,
+        key=lambda producto: producto.fecha_agregado,
+        reverse=True
+    )
     return render(request, "admin/listado productos.html", {'productos':productos})
 
 class Listado_usuarios(LoginRequiredMixin, ListView):
@@ -54,7 +60,7 @@ def listado_pedidos(request):
 
 @login_required
 def agregar_usuario(request):
-    return render(request, "admin/agregar usuario.html",{})
+    return render(request, "admin/agregar usuario.html", {})
 
 def checkout(request):
     return render(request, "checkout.html",{})
@@ -69,22 +75,85 @@ def producto(request, id):
 def agregarProducto(request, tipo):
     if tipo == "Tarjeta Gráfica":
         form = Tarjeta_GraficaForm()
+        if request.method == "POST":
+            form = Tarjeta_GraficaForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "Procesador":
         form = ProcesadorForm()
+        if request.method == "POST":
+            form = ProcesadorForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "Memoria":
         form = MemoriaRamForm()
+        if request.method == "POST":
+            form = MemoriaRamForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "Disco Duro":
         form = HDDForm()
+        if request.method == "POST":
+            form = HDDForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "SSD":
         form = SSDForm()
+        if request.method == "POST":
+            form = SSDForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "Fuente de Alimentación":
         form = FuenteAlimentacionForm()
+        if request.method == "POST":
+            form = FuenteAlimentacionForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "Gabinete":
         form = GabineteForm()
+        if request.method == "POST":
+            form = GabineteForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "Placa Base":
         form = PlacaBaseForm()
+        if request.method == "POST":
+            form = PlacaBaseForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     elif tipo == "Cooler":
         form = CoolerForm()
+        if request.method == "POST":
+            form = CoolerForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect("listado_productos")
+            else:
+                return redirect("agregar-producto", tipo=tipo)
     else:
         return redirect("listado_productos")
     return render(request, "admin/agregar producto.html", {'form':form, 'tipo':tipo})

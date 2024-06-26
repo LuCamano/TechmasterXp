@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
+import os
 # Create your models here.
 class Producto(models.Model):
     nombre = models.CharField("Nombre", max_length=200)
@@ -20,7 +20,7 @@ class Producto(models.Model):
         Devuelve el nombre del tipo de producto.
         '''
         return self.__class__._meta.verbose_name
-
+    
     class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
@@ -183,8 +183,8 @@ class Gabinete(Producto):
 class Cooler(Producto):
     socket = models.ForeignKey("pagina.Socket", verbose_name="Socket", on_delete=models.PROTECT)
     rpm = models.PositiveIntegerField("RPM")
-    flujo = models.PositiveIntegerField("Flujo de aire", help_text="En CFM")
-    ruido = models.PositiveIntegerField("Ruido", help_text="En dBA")
+    flujo = models.FloatField("Flujo de aire", help_text="En CFM")
+    ruido = models.FloatField("Ruido", help_text="En dBA")
 
     def __str__(self):
         return self.nombre

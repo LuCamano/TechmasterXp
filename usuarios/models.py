@@ -74,6 +74,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return self.correo
     
     @property
+    def tipo_cuenta(self):
+        if self.is_superuser and self.is_staff:
+            return "Superusuario"
+        elif self.is_staff:
+            return "Empleado"
+        else:
+            return "Cliente"
+
+    @property
     def get_full_name(self):
         return f"{self.nombre} {self.apellido}"
     

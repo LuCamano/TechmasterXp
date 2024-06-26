@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <h3>Listado de usuarios</h3>
-                <a href="agregar usuario.html" class="btn btn-success rounded-4 p-2">Agregar usuario</a>
+                <a href="{% url "agregar-usuario" %}" class="btn btn-success rounded-4 p-2">Agregar usuario</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive rounded">
@@ -46,6 +46,7 @@
                                 <th>Apellido</th>
                                 <th>Dirección</th>
                                 <th>Teléfono</th>
+                                <th>Tipo cuenta</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -59,6 +60,7 @@
                                     <td>{{ usuario.apellido }}</td>
                                     <td>{{ usuario.direccion1 }}, {{ usuario.direccion2 }}</td>
                                     <td>{{ usuario.telefono }}</td>
+                                    <td>{{ usuario.tipo_cuenta }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <button type="submit" class="btn btn-warning rounded-3 p-3"><i

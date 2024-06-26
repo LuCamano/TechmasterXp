@@ -38,7 +38,7 @@
                     <li><a class="dropdown-item" href="{% url "agregar-producto" "Placa Base" %}">Agregar PlacaBase</a></li>
                     <li><a class="dropdown-item" href="{% url "agregar-producto" "SSD" %}">Agregar SSD</a></li>
                     <li><a class="dropdown-item" href="{% url "agregar-producto" "Disco Duro" %}">Agregar HDD</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Memoria" %}">Agregar MemoriaRam</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Memoria" %}">Agregar Memoria</a></li>
                     <li><a class="dropdown-item" href="{% url "agregar-producto" "Fuente de Alimentación" %}">Agregar Fuente de Alimentacion</a></li>
                     <li><a class="dropdown-item" href="{% url "agregar-producto" "Gabinete" %}">Agregar Gabinete</a></li>
                     <li><a class="dropdown-item" href="{% url "agregar-producto" "Cooler" %}">Agregar Cooler</a></li>
@@ -85,6 +85,7 @@
                         </tfoot>
                     </table>
                 </div>
+                {{ form|crispy }}
             </div>
         </div>
     </div>
