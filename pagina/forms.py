@@ -1,10 +1,22 @@
 from django import forms
 from .models import Producto, Cooler, Fabricante, Marca, Tarjeta_Grafica, FuenteAlimentacion, Gabinete, GPU, HDD, MemoriaRam, PlacaBase, Procesador, SSD, Socket
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ['nombre', 'precio', 'descripcion', 'imagen', 'fecha_agregado']
+        fields = ['nombre', 'precio', 'descripcion', 'imagen', 'stock']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.add_input(Submit("submit", "Guardar"))
+        for campo in self.fields:
+            self.fields[campo].widget.attrs["placeholder"] = self.fields[campo].label + "..."
 
 class CoolerForm(ProductoForm):
     class Meta(ProductoForm.Meta):

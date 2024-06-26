@@ -31,7 +31,18 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <h3>Listado de productos</h3>
-                <a href="nuevo producto.html" class="btn btn-success rounded-4 p-2">Agregar producto</a>
+                <button class="btn btn-success rounded-4 p-3 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Agregar producto</button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Tarjeta Gráfica" %}">Agregar tarjeta gráfica</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Procesador" %}">Agregar Procesador</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Placa Base" %}">Agregar PlacaBase</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "SSD" %}">Agregar SSD</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Disco Duro" %}">Agregar HDD</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Memoria" %}">Agregar MemoriaRam</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Fuente de Alimentación" %}">Agregar Fuente de Alimentacion</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Gabinete" %}">Agregar Gabinete</a></li>
+                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Cooler" %}">Agregar Cooler</a></li>
+                </ul>
             </div>
             <div class="card-body">
                 <div class="table-responsive rounded">
@@ -41,7 +52,6 @@
                             <tr>
                                 <th>Imagen</th>
                                 <th>Nombre</th>
-                                <th>Marca</th>
                                 <th>Categoría</th>
                                 <th>Precio</th>
                                 <th>Stock</th>
@@ -49,45 +59,27 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            <tr class="table-primary">
-                                <td><img src="{% static 'img/3050.jpg'%}" class="object-fit-scale" height="100"
-                                        width="100" alt="Imagen producto"></td>
-                                <td>RTX 3050 RogStrix</td>
-                                <td>ASUS</td>
-                                <td>Tarjeta Gráfica</td>
-                                <td>$1000</td>
-                                <td>30</td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <button type="submit" class="btn btn-warning rounded-3 p-3"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button type="submit" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal" data-id="{{ product.id }}"
-                                            data-name="RTX 3050 RogStrix" data-tipo="Producto"
-                                            class="btn btn-danger rounded-3 p-3"><i
-                                                class="bi bi-trash3"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="table-primary">
-                                <td><img src="{% static 'img/i7 9700.jpg'%}" class="object-fit-scale" height="100"
-                                        width="100" alt="Imagen producto"></td>
-                                <td>Core i7 9700</td>
-                                <td>INTEL</td>
-                                <td>Procesador</td>
-                                <td>$1000</td>
-                                <td>30</td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-warning rounded-3 p-3"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                            data-id="{{ product.id }}" data-name="Core i7 9700"
-                                            data-tipo="Producto" class="btn btn-danger rounded-3 p-3"><i
-                                                class="bi bi-trash3"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                            {% for producto in productos %}
+                                <tr class="table-primary">
+                                    <td><img src="{{ producto.imagen.url }}" class="object-fit-scale" height="100"
+                                            width="100" alt="Imagen producto"></td>
+                                    <td>{{ producto.nombre }}</td>
+                                    <td>{{ producto.tipo }}</td>
+                                    <td>${{ producto.precio }}</td>
+                                    <td>{{ producto.stock }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="submit" class="btn btn-warning rounded-3 p-3"><i
+                                                    class="bi bi-pencil-square"></i></button>
+                                            <button type="submit" data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal" data-id="{{ producto.id }}"
+                                                data-name="{{ producto.nombre }}" data-tipo="{{ producto.tipo }}"
+                                                class="btn btn-danger rounded-3 p-3"><i
+                                                    class="bi bi-trash3"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                         <tfoot>
                         </tfoot>

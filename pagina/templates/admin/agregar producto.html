@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Agregar un/a {{ tipo }}{% endblock %}
+
+{% block content %}
+    <a href="{% url "listado_productos" %}"><i class="bi bi-arrow-bar-left"></i>volver</a>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title">Agregar un/a {{ tipo }}</h1>
+                </div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

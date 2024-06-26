@@ -9,6 +9,7 @@ class Producto(models.Model):
     descripcion = models.ImageField("Descripción", upload_to="productos/descripciones", null=True, blank=True)
     imagen = models.ImageField("Imagen", upload_to="productos", null=True, blank=True)
     fecha_agregado = models.DateTimeField("Fecha de agregado", auto_now_add=True)
+    stock = models.PositiveIntegerField("Stock")
 
     def __str__(self):
         return self.nombre
@@ -47,7 +48,7 @@ class Marca(models.Model):
 
 class Tarjeta_Grafica(Producto):
     memoria = models.PositiveIntegerField("Memoria", help_text="En GB")
-    fabricante = models.ForeignKey("pagina.Fabricante", verbose_name="Fabricante", on_delete=models.PROTECT, null=True)
+    fabricante = models.ForeignKey("pagina.Fabricante", verbose_name="Fabricante", on_delete=models.PROTECT)
     gpu = models.ForeignKey("pagina.GPU", verbose_name="GPU", on_delete=models.PROTECT)
     bus = models.CharField("Bus", max_length=50)
     perfil = models.CharField("Perfil", max_length=50)
@@ -163,14 +164,14 @@ class FuenteAlimentacion(Producto):
         verbose_name_plural = "Fuentes de Alimentación"
 
 class Gabinete(Producto):
-    tam_placa = models.CharField("Tamaño máximo de la placa", max_length=50, default="ATX")
+    tam_placa = models.CharField("Tamaño máximo de la placa", max_length=50)
     fuente = models.CharField("Ubicación fuente", max_length=50, default="Inferior")
     vent_inc = models.CharField("Ventiladores incluidos", max_length=100, default="No posee")
-    esp_vent_front = models.CharField("Espacios para ventiladores frontales", max_length=100, default="3 x 120 mm")
-    esp_vent_top = models.CharField("Espacios para ventiladores superiores", max_length=100, default="2 x 120 mm")
-    esp_vent_back = models.CharField("Espacios para ventiladores traseros", max_length=100, default="1 x 120 mm")
+    esp_vent_front = models.CharField("Espacios para ventiladores frontales", max_length=100)
+    esp_vent_top = models.CharField("Espacios para ventiladores superiores", max_length=100)
+    esp_vent_back = models.CharField("Espacios para ventiladores traseros", max_length=100)
     esp_vent_bottom = models.CharField("Espacios para ventiladores inferiores", max_length=100, default="No posee")
-    puertos = models.CharField("Puertos", max_length=100, blank=True)
+    puertos = models.CharField("Puertos", max_length=100)
 
     def __str__(self):
         return self.nombre

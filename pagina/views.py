@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Producto
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.contrib.auth import get_user_model
+from .forms import *
 
 usuario = get_user_model()
 # Create your views here.
@@ -65,3 +66,25 @@ def perfil(request):
 def producto(request, id):
     return render(request, "producto.html",{})
 
+def agregarProducto(request, tipo):
+    if tipo == "Tarjeta Gráfica":
+        form = Tarjeta_GraficaForm()
+    elif tipo == "Procesador":
+        form = ProcesadorForm()
+    elif tipo == "Memoria":
+        form = MemoriaRamForm()
+    elif tipo == "Disco Duro":
+        form = HDDForm()
+    elif tipo == "SSD":
+        form = SSDForm()
+    elif tipo == "Fuente de Alimentación":
+        form = FuenteAlimentacionForm()
+    elif tipo == "Gabinete":
+        form = GabineteForm()
+    elif tipo == "Placa Base":
+        form = PlacaBaseForm()
+    elif tipo == "Cooler":
+        form = CoolerForm()
+    else:
+        return redirect("listado_productos")
+    return render(request, "admin/agregar producto.html", {'form':form, 'tipo':tipo})
