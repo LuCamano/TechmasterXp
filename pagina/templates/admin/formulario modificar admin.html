@@ -3,7 +3,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Agregar un/a {{ tipo }}{% endblock %}
+{% block title %}Modificar {{ tipo }}{% endblock %}
 
 {% block content %}
     <a href="{% if tipo == "usuario" %}{% url "listado_usuarios" %}{% else %}{% url "listado_productos" %}{% endif %}"><i class="bi bi-arrow-bar-left"></i>volver</a>
@@ -11,7 +11,7 @@
         <div class="col-12 col-md-9 col-lg-7">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="card-title">Agregar un/a {{ tipo }}</h1>
+                    <h1 class="card-title">Modificar {{ tipo }}</h1>
                 </div>
                 <div class="card-body">
                     {% crispy form %}

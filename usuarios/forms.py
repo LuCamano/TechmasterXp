@@ -1,9 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Div, Field, Row, Column
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.auth import get_user_model
+import os
 
 user = get_user_model()
 
@@ -54,22 +55,14 @@ class RegistroForm(UserCreationForm):
             ),
             Submit("submit", "Registrarse")
         )
-    def save(self):
-        return self.Meta.model.objects.create_user(
-            correo=self.cleaned_data["correo"],
-            rut=self.cleaned_data["rut"],
-            nombre=self.cleaned_data["nombre"],
-            apellido=self.cleaned_data["apellido"],
-            password=self.cleaned_data["password1"]
-        )
-    
+
 class RegistroAdminForm(UserCreationForm):
     password1 = forms.CharField(label="Contraseña", widget=forms.PasswordInput(attrs={"id":"password1"}))
     password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput(attrs={"id":"password2"}))
 
     class Meta:
         model = user
-        fields = ['correo', 'rut', 'nombre', 'apellido', 'direccion1', 'direccion2', 'telefono', 'is_staff']
+        fields = ['imagen','correo', 'rut', 'nombre', 'apellido', 'direccion1', 'direccion2', 'telefono', 'is_staff', 'is_superuser']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,6 +71,7 @@ class RegistroAdminForm(UserCreationForm):
         self.helper.form_class = "needs-validation card-body"
         self.helper.attrs = {"novalidate": ""}
         self.helper.layout = Layout(
+            Field("imagen", placeholder="Imagen...", id="imagen"),
             Field("correo", placeholder="Correo...", id="correo"),
             Div(
                 Field("nombre", placeholder="Nombre...", wrapper_class="col-12 col-md-6", id="nombre"),
@@ -89,10 +83,10 @@ class RegistroAdminForm(UserCreationForm):
                 Field("direccion1", placeholder="Dirección...", id="direccion1", wrapper_class="col-12 col-md-6", required=True),
                 Field("direccion2", placeholder="Comuna...", id="direccion2", wrapper_class="col-12 col-md-6"),
                 ),
-            Div(
-                Field("telefono", placeholder="Teléfono...", wrapper_class="col-12 col-md-6"),
+            Field("telefono", placeholder="Teléfono..."),
+            Row(
                 Field("is_staff", wrapper_class="col-12 col-md-6"),
-                css_class="row"
+                Field("is_superuser", wrapper_class="col-12 col-md-6")
             ),
             Div(
                 Field("password1", placeholder="Contraseña...", wrapper_class="col-12 col-md-6"),
@@ -101,6 +95,103 @@ class RegistroAdminForm(UserCreationForm):
             ),
             Submit("submit", "Agregar")
         )
-    def save(self, commit: bool):
-        self.cleaned_data["rut"] = self.Meta.model.objects.clean_rut(self.cleaned_data["rut"])
-        return super().save(commit)
+
+class EditarUsuarioForm(UserChangeForm):
+    class Meta:
+        model = user
+        fields = ['correo', 'rut', 'nombre', 'apellido', 'direccion1', 'direccion2', 'telefono']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation card-body"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.layout = Layout(
+            Field("correo", placeholder="Correo...", id="correo"),
+            Row(
+                Column(Field("nombre", placeholder="Nombre...", id="nombre")),
+                Column(Field("apellido", placeholder="Apellido...", id="apellido"))
+            ),
+            Field("rut", placeholder="Rut...", id="rut", maxlength="9"),
+            Row(
+                Column(Field("direccion1", placeholder="Dirección...", id="direccion1", required=True)),
+                Column(Field("direccion2", placeholder="Departamento, casa, etc.", id="direccion2"))
+                ),
+            Field("telefono", placeholder="Teléfono..."),
+            Submit("submit", "Guardar cambios")
+        )
+
+class CambiarFotoForm(forms.ModelForm):
+    class Meta:
+        model = user
+        fields = ['imagen']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation card-body"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.layout = Layout(
+            Field("imagen", id="imagen"),
+            Submit("submit", "Cambiar foto")
+        )
+    
+    def save(self):
+        oldUsr = user.objects.get(rut=self.instance.rut)
+        imagen_antigua = oldUsr.imagen.path if oldUsr.imagen else None
+        imagen_nueva = self.cleaned_data.get("imagen")
+        if imagen_nueva and imagen_antigua:
+            print("Imagen nueva y antigua")
+            print(imagen_nueva.name, os.path.basename(imagen_antigua))
+            if imagen_nueva.name != os.path.basename(imagen_antigua):
+                print("Nueva imagen")
+                if os.path.exists(imagen_antigua):
+                    print("Eliminando imagen antigua")
+                    os.remove(imagen_antigua)
+        usuario = super().save()
+        return usuario
+    
+class EditarUsuarioAdminForm(EditarUsuarioForm):
+    class Meta(EditarUsuarioForm.Meta):
+        fields = EditarUsuarioForm.Meta.fields + ['is_staff', 'is_superuser', 'imagen']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.layout = Layout(
+            Field("correo", placeholder="Correo...", id="correo"),
+            Row(
+                Column(Field("nombre", placeholder="Nombre...", id="nombre")),
+                Column(Field("apellido", placeholder="Apellido...", id="apellido"))
+            ),
+            Field("rut", placeholder="Rut...", id="rut", maxlength="9", readonly=True),
+            Row(
+                Column(Field("direccion1", placeholder="Dirección...", id="direccion1", required=True)),
+                Column(Field("direccion2", placeholder="Departamento, casa, etc.", id="direccion2"))
+                ),
+            Field("telefono", placeholder="Teléfono..."),
+            Row(
+                Column(Field("is_staff")),
+                Column(Field("is_superuser"))
+            ),
+            Field("imagen", id="imagen"),
+            Submit("submit", "Guardar cambios")
+        )
+    def save(self):
+        oldUsr = user.objects.get(rut=self.instance.rut)
+        imagen_antigua = oldUsr.imagen.path if oldUsr.imagen else None
+        imagen_nueva = self.cleaned_data.get("imagen") if len(self.cleaned_data.get("imagen").name.split("/")) == 1 else None
+        if imagen_nueva and imagen_antigua:
+            print("Imagen nueva: ", imagen_nueva.name, "imagen antigua:", os.path.basename(imagen_antigua))
+            if imagen_nueva.name != os.path.basename(imagen_antigua):
+                print("Nueva imagen")
+                if os.path.exists(imagen_antigua):
+                    print("Eliminando imagen antigua")
+                    os.remove(imagen_antigua)
+        usuario = super().save()
+        return usuario

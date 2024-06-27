@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Producto
+from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.contrib.auth import get_user_model
 from .forms import *
+from django.contrib import messages
 
 usuario = get_user_model()
 # Create your views here.
@@ -18,6 +19,34 @@ def get_subclasses(cls):
                 subclasses.add(child)
                 work.append(child)
     return subclasses
+
+def get_form(tipo):
+    form_dict = {
+        "Tarjeta Gráfica": Tarjeta_GraficaForm,
+        "Procesador": ProcesadorForm,
+        "Memoria": MemoriaRamForm,
+        "Disco Duro": HDDForm,
+        "SSD": SSDForm,
+        "Fuente de Alimentación": FuenteAlimentacionForm,
+        "Gabinete": GabineteForm,
+        "Placa Base": PlacaBaseForm,
+        "Cooler": CoolerForm,
+    }
+    return form_dict.get(tipo, None)
+
+def get_model(tipo):
+    model_dict = {
+        "Tarjeta Gráfica": Tarjeta_Grafica,
+        "Procesador": Procesador,
+        "Memoria": MemoriaRam,
+        "Disco Duro": HDD,
+        "SSD": SSD,
+        "Fuente de Alimentación": FuenteAlimentacion,
+        "Gabinete": Gabinete,
+        "Placa Base": PlacaBase,
+        "Cooler": Cooler
+    }
+    return model_dict.get(tipo, None)
 
 def index(request):
     producto_subclasses = get_subclasses(Producto)
@@ -36,6 +65,9 @@ def index(request):
 
 @login_required
 def listado_productos(request):
+    if not request.user.is_staff and not request.user.is_superuser:
+        return redirect("index")
+    
     producto_subclasses = get_subclasses(Producto)
     productos = []
 
@@ -53,8 +85,23 @@ class Listado_usuarios(LoginRequiredMixin, ListView):
     model = usuario
     template_name = "admin/listado usuarios.html"
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_staff and request.user.is_superuser:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect("index")
+        
+    def post(self, request, *args, **kwargs):
+        if request.user.is_staff and request.user.is_superuser:
+            return super().post(request, *args, **kwargs)
+        else:
+            return redirect("index")
+
 @login_required
 def listado_pedidos(request):
+    if not request.user.is_staff:
+        return redirect("index")
+
     return render(request, "admin/listado pedidos.html", {})
 
 def checkout(request):
@@ -63,88 +110,62 @@ def checkout(request):
 def producto(request, id):
     return render(request, "producto.html",{})
 
+@login_required
 def agregarProducto(request, tipo):
-    if tipo == "Tarjeta Gráfica":
-        form = Tarjeta_GraficaForm()
-        if request.method == "POST":
-            form = Tarjeta_GraficaForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "Procesador":
-        form = ProcesadorForm()
-        if request.method == "POST":
-            form = ProcesadorForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "Memoria":
-        form = MemoriaRamForm()
-        if request.method == "POST":
-            form = MemoriaRamForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "Disco Duro":
-        form = HDDForm()
-        if request.method == "POST":
-            form = HDDForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "SSD":
-        form = SSDForm()
-        if request.method == "POST":
-            form = SSDForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "Fuente de Alimentación":
-        form = FuenteAlimentacionForm()
-        if request.method == "POST":
-            form = FuenteAlimentacionForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "Gabinete":
-        form = GabineteForm()
-        if request.method == "POST":
-            form = GabineteForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "Placa Base":
-        form = PlacaBaseForm()
-        if request.method == "POST":
-            form = PlacaBaseForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
-    elif tipo == "Cooler":
-        form = CoolerForm()
-        if request.method == "POST":
-            form = CoolerForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect("listado_productos")
-            else:
-                return redirect("agregar-producto", tipo=tipo)
+    form_class = get_form(tipo)
+
+    if not request.user.is_staff and not request.user.is_superuser:
+        return redirect("index")
+
+    if not form_class:
+        raise ValueError(f"Formulario no encontrado para el tipo {tipo}")
+    
+    if request.method == "POST":
+        form = form_class(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Producto agregado exitosamente")
+            return redirect("listado_productos")
+        else:
+            messages.warning(request, "Error al agregar el producto")
+            return redirect("agregar-producto", tipo=tipo)
     else:
-        return redirect("listado_productos")
+        form = form_class()
     return render(request, "admin/formulario agregar admin.html", {'form':form, 'tipo':tipo})
+
+@login_required
+def editarProducto(request, tipo, pk):
+    model = get_model(tipo)
+    prod = model.objects.get(pk=pk)
+    form_class = get_form(tipo)
+
+    if not request.user.is_staff and not request.user.is_superuser:
+        return redirect("index")
+
+    if not form_class:
+        raise ValueError(f"Formulario no encontrado para el tipo {tipo}")
+    
+    if request.method == "POST":
+        form = form_class(request.POST, request.FILES, instance=prod)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Producto modificado exitosamente")
+            return redirect("listado_productos")
+        else:
+            messages.warning(request, "Error al modificar el producto")
+            return redirect("modificar-producto", tipo=tipo, pk=pk)
+    else:
+        form = form_class(instance=prod)
+    return render(request, "admin/formulario modificar admin.html", {'form':form, 'tipo':tipo})
+
+@login_required
+def eliminarProducto(request, pk, tipo):
+    model = get_model(tipo)
+    prod = model.objects.get(pk=pk)
+    prod.delete()
+
+    if not request.user.is_staff and not request.user.is_superuser:
+        return redirect("index")
+
+    messages.success(request, "Producto eliminado exitosamente")
+    return redirect("listado_productos")

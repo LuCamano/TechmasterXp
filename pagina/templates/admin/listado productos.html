@@ -28,6 +28,18 @@
         </li>
     </ul>
     <div class="col-12">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %} alert-dismissible fade show" role="alert">
+                <strong>
+                    {% if message.tags == 'success' %}
+                        <i class="bi bi-info-circle-fill"></i>
+                    {% else %}
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    {% endif %}
+                </strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <h3>Listado de productos</h3>
@@ -61,7 +73,7 @@
                         <tbody class="table-group-divider">
                             {% for producto in productos %}
                                 <tr class="table-primary">
-                                    <td><img src="{{ producto.imagen.url }}" class="object-fit-scale" height="100"
+                                    <td><img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}{% static "img/torre-de-pc.png" %}{% endif %}" class="object-fit-scale" height="100"
                                             width="100" alt="Imagen producto"></td>
                                     <td>{{ producto.nombre }}</td>
                                     <td>{{ producto.tipo }}</td>
@@ -69,12 +81,12 @@
                                     <td>{{ producto.stock }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button type="submit" class="btn btn-warning rounded-3 p-3"><i
-                                                    class="bi bi-pencil-square"></i></button>
+                                            <a href="{% url "modificar-producto" producto.tipo producto.id %}" class="btn btn-warning rounded-3 p-3"><i
+                                                    class="bi bi-pencil-square"></i></a>
                                             <button type="submit" data-bs-toggle="modal"
                                                 data-bs-target="#deleteModal" data-id="{{ producto.id }}"
-                                                data-name="{{ producto.nombre }}" data-tipo="{{ producto.tipo }}"
-                                                class="btn btn-danger rounded-3 p-3"><i
+                                                data-name="{{ producto.nombre }}" data-tipo="Producto"
+                                                class="btn btn-danger rounded-3 p-3" data-tipo-producto="{{ producto.tipo }}"><i
                                                     class="bi bi-trash3"></i></button>
                                         </div>
                                     </td>
@@ -85,7 +97,6 @@
                         </tfoot>
                     </table>
                 </div>
-                {{ form|crispy }}
             </div>
         </div>
     </div>

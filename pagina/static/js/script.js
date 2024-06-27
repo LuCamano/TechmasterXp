@@ -452,10 +452,11 @@ if (deleteModal) {
 
         if (tipoObjeto == 'Usuario'){
             modalTitle.textContent = 'Eliminar usuario';
-            deleteForm.action = '/delete-user/' + productId + '/';
+            deleteForm.action = '/usuarios/delete-user/' + productId + '/';
         } else if (tipoObjeto == 'Producto'){
+            var tipoProducto = button.getAttribute('data-tipo-producto');
             modalTitle.textContent = 'Eliminar producto';
-            deleteForm.action = '/delete-product/' + productId + '/';
+            deleteForm.action = '/delete-product/' + productId + '/' + tipoProducto + '/';
         } else if (tipoObjeto == 'Marca'){
             modalTitle.textContent = 'Eliminar marca';
             deleteForm.action = '/delete-brand/' + productId + '/';

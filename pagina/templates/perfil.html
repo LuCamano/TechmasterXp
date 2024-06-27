@@ -5,12 +5,29 @@
 {% block title %}{{ request.user.get_full_name }}{% endblock %}
 
 {% block content %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %} alert-dismissible fade show" role="alert">
+            <strong>
+                {% if message.tags == 'success' %}
+                    <i class="bi bi-info-circle-fill"></i>
+                {% else %}
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                {% endif %}
+            </strong> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
     <h1>Perfil</h1>
     <div class="d-flex flex-column flex-md-row gap-md-3">
         <div class="col-12 col-md-4 mb-3">
             <div class="card">
                 <div class="p-3">
-                    <img class="rounded-circle w-100 border border-4 object-fit-contain" src="{% if request.user.imagen %}{{ request.user.imagen.url }}{% else %}{% static 'img/blank-profile-picture.png'%}{% endif %}" alt="Foto de perfil" />
+                    <div class="position-relative d-inline-block w-100">
+                        <img class="rounded-circle w-100 border border-4 object-fit-contain" src="{% if request.user.imagen %}{{ request.user.imagen.url }}{% else %}{% static 'img/blank-profile-picture.png'%}{% endif %}" alt="Foto de perfil" />
+                        <button class="position-absolute end-0 top-0 btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#editProfilePictureModal">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </div>
                 </div>
                     <div class="card-body">
                     <h4 class="card-title fw-bolder">{{ request.user.get_full_name }}</h4>
@@ -110,6 +127,26 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div class="modal fade" id="editProfilePictureModal" tabindex="-1" aria-labelledby="editProfilePictureModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfilePictureModalLabel">Cambiar Foto de Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="profilePicture" class="form-label">Seleccionar nueva foto</label>
+                            <input class="form-control" type="file" id="profilePicture" name="imagen" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Cambiar Foto</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
