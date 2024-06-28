@@ -17,7 +17,7 @@
                         </ul>
                         <div class="carousel-inner carrusel mh-100 border rounded" role="listbox">
                             <div class="carousel-item active">
-                                <img src="{% static 'img/banner prueba 1.jpg'%}" class="w-100 d-block"
+                                <img src="{% static 'img/EN_Banner_ASUS_Banner.jpg'%}" class="w-100 d-block"
                                     alt="First slide" />
                             </div>
                             <div class="carousel-item">
@@ -25,7 +25,7 @@
                                     alt="Second slide" />
                             </div>
                             <div class="carousel-item">
-                                <img src="{% static 'img/banner prueba 1.jpg'%}" class="w-100 d-block"
+                                <img src="{% static 'img/banner blanco.jpg'%}" class="w-100 d-block"
                                     alt="Third slide" />
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                 <p class="fs-4 fw-medium">Precio:</p>
                                 <p class="fs-4 fw-medium">${{ producto.precio }}</p>
                             </div>
-                            <a href="{% url "producto" producto.id %}" class="btn btn-outline-info d-block">Ver más</a>
+                            <a href="{% url "producto" producto.tipo producto.id  %}" class="btn btn-outline-info d-block">Ver más</a>
                         </div>
                     </div>
                 {% endfor %}

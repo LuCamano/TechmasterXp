@@ -2,18 +2,18 @@
 
 {% load static %}
 
-{% block title %}ASUS ROG Nvidia GeForce RTX3050{% endblock %}
+{% block title %}{{ producto.nombre }}{% endblock %}
 
 {% block content %}
-    <h1 class="mt-3">ASUS ROG Nvidia GeForce RTX3050</h1>
+    <h1 class="mt-3">{{ producto.nombre }}</h1>
     <div class="row mb-5">
-        <div class="col-12 col-md-4 me-auto">
-            <img src="{% static 'img/3050.jpg'%}" alt="ASUS ROG Nvidia GeForce RTX3050" class="object-fit-contain w-100">
+        <div class="col-12 col-md-4 me-auto mb-3">
+            <img src="{{ producto.imagen.url }}" alt="ASUS ROG Nvidia GeForce RTX3050" class="object-fit-contain w-100">
         </div>
-        <div class="col-12 col-md-4 mx-auto">
-            <p class="fs-5">Precio: $400.000</p>
-            <p class="fs-5">Stock: 10</p>
-            <p class="fs-5">Descripción: 8 GB GDDR6, 128-bit</p>
+        <div class="col-12 col-md-4 mx-auto mb-3">
+            {% for campo, valor in valores.items %}
+                <p class="fs-5"><strong>{{ campo|capfirst }}: </strong>{% if campo == "precio" %}${% endif %}{{ valor }}</p>
+            {% endfor %}
         </div>
         <div class="col-12 col-md-4 ms-auto">
             <form class="d-flex flex-column justify-content-center">
@@ -30,29 +30,11 @@
         </div>
     </div>
     <div class="col-12">
-        <p class="h3">Especificaciones técnicas</p>
-        <p class="fs-5">
-            Bus Standard: PCI Express 4.0<br>
-            OpenGL: OpenGL®4.6<br>
-            Memoria de Video: GDDR6 8GB<br>
-            Engine Clock: OC Mode - 1860 MHz (Boost Clock) Gaming Mode - 1830 MHz (Boost Clock)<br>
-            CUDA Core: 2560<br>
-            Memory Speed: 14 Gbps<br>
-            Memory Interface: 128-bit<br>
-            Resolution: Digital Max Resolution 7680 x 4320<br>
-            Interface: Yes x 1 (Native HDMI 2.1) Yes x 3 (Native DisplayPort 1.4a)<br>
-            HDCP Support: Yes (2.3)<br>
-            Maximum Display Support: 4<br>
-            NVlink/ Crossfire Support: No<br>
-            Recommended PSU: 650W<br>
-            Power Connectors: 8 pin x 1<br>
-            Accessories: 1 x ROG Velcro Hook & Loop<br>
-            Software: ASUS GPU Tweak II & Drivers: please download all software from the support site.<br>
-            Dimensions: 11.81 " x 5.16 " x 2.13 " Inch 30 x 13.1 x 5.4 Centimeter<br>
-            Slot: 2.7 slot<br>
-            Note: * All specifications are subject to change without notice. Please check with your supplier for exact offers. Products may not be available in all markets.<br>
-            * PCB color and bundled software versions are subject to change without notice.<br>
-            * Brand and product names mentioned are trademarks of their respective companies.
-        </p>
+        <p class="h3">Descripción</p>
+        {% if producto.descripcion %}
+            <img class="w-100" src="{{ producto.descripcion.url }}" alt="Descripción">
+        {% else %}
+            <p>No hay descripción disponible</p>
+        {% endif %}
     </div>
 {% endblock %}

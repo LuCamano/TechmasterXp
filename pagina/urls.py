@@ -11,7 +11,7 @@ urlpatterns = [
     path('admin/listado-pedidos/', views.listado_pedidos, name="listado_pedidos"),
     path('agregar-producto/<tipo>/', views.agregarProducto, name="agregar-producto"),
     path('checkout/', views.checkout, name="checkout"),
-    path('producto/<id>/', views.producto, name="producto"),
+    path('producto/<tipo>/<id>/', views.producto, name="producto"),
     path('modificar-producto/<tipo>/<pk>/', views.editarProducto, name="modificar-producto"),
     path('delete-product/<pk>/<tipo>/', views.eliminarProducto, name="delete-product"),
 ]

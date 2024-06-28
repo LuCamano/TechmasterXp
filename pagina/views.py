@@ -107,8 +107,13 @@ def listado_pedidos(request):
 def checkout(request):
     return render(request, "checkout.html",{})
 
-def producto(request, id):
-    return render(request, "producto.html",{})
+def producto(request, tipo, id):
+    product_class = get_model(tipo)
+    product = product_class.objects.get(pk=id)
+    campos = product._meta.get_fields()
+    camposExcluidos = ['id', 'fecha_agregado', 'descripcion', 'imagen', 'nombre']
+    valores = {field.name.replace("_", " "): getattr(product, field.name) for field in campos if field.name not in camposExcluidos}
+    return render(request, "producto.html",{'producto': product, 'valores': valores})
 
 @login_required
 def agregarProducto(request, tipo):
