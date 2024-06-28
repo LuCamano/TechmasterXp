@@ -26,6 +26,13 @@ class Producto(models.Model):
         verbose_name_plural = "Productos"
         abstract = True
 
+    def delete(self, *args, **kwargs):
+        if self.imagen and os.path.exists(self.imagen.path):
+            os.remove(self.imagen.path)
+        if self.descripcion and os.path.exists(self.descripcion.path):
+            os.remove(self.descripcion.path)
+        return super().delete(*args, **kwargs)
+
 class Fabricante(models.Model):
     nombre = models.CharField("Nombre", max_length=100, blank=False)
 

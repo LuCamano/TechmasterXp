@@ -2,6 +2,7 @@ from django import forms
 from .models import Producto, Cooler, Fabricante, Marca, Tarjeta_Grafica, FuenteAlimentacion, Gabinete, GPU, HDD, MemoriaRam, PlacaBase, Procesador, SSD, Socket
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+import os
 
 class ProductoForm(forms.ModelForm):
     class Meta:
@@ -17,6 +18,30 @@ class ProductoForm(forms.ModelForm):
         self.helper.add_input(Submit("submit", "Guardar"))
         for campo in self.fields:
             self.fields[campo].widget.attrs["placeholder"] = self.fields[campo].label + "..."
+
+    def save(self):
+        oldProdct = self.Meta.model.objects.get(pk=self.instance.pk)
+        #Obtener las rutas de los archivos antiguos
+        imagen_antigua = oldProdct.imagen.path if oldProdct.imagen else None
+        descripcion_antigua = oldProdct.descripcion.path if oldProdct.descripcion else None
+        #Obtener las rutas de los archivos nuevos y si no existen, asignar None
+        imagen_nueva = self.cleaned_data.get("imagen") if len(self.cleaned_data.get("imagen").name.split("/")) == 1 else None
+        descripcion_nueva = self.cleaned_data.get("descripcion") if len(self.cleaned_data.get("descripcion").name.split("/")) == 1 else None
+        #Si hay imagen nueva y antigua
+        if imagen_nueva and imagen_antigua:
+            #Si las rutas son diferentes
+            if imagen_nueva.name != os.path.basename(imagen_antigua):
+                if os.path.exists(imagen_antigua):
+                    #Borrar la antigua
+                    os.remove(imagen_antigua)
+        #Si hay descripcion nueva y antigua
+        if descripcion_nueva and descripcion_antigua:
+            #Si las rutas son diferentes
+            if descripcion_nueva.name != os.path.basename(descripcion_antigua):
+                if os.path.exists(descripcion_antigua):
+                    #Borrar la antigua
+                    os.remove(descripcion_antigua)
+        return super().save()
 
 class CoolerForm(ProductoForm):
     class Meta(ProductoForm.Meta):
