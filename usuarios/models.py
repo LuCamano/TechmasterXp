@@ -128,3 +128,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
                 img = img.crop((left, top, right, bottom))
                 img.save(self.imagen.path)
+
+    def delete(self, *args, **kwargs):
+        if self.imagen and os.path.exists(self.imagen.path):
+            os.remove(self.imagen.path)
+        return super().delete(*args, **kwargs)

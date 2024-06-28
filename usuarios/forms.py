@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Div, Field, Row, Column
 from crispy_bootstrap5.bootstrap5 import FloatingField
@@ -99,7 +99,7 @@ class RegistroAdminForm(UserCreationForm):
 class EditarUsuarioForm(UserChangeForm):
     class Meta:
         model = user
-        fields = ['correo', 'rut', 'nombre', 'apellido', 'direccion1', 'direccion2', 'telefono']
+        fields = ['correo', 'nombre', 'apellido', 'direccion1', 'direccion2', 'telefono']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -113,12 +113,11 @@ class EditarUsuarioForm(UserChangeForm):
                 Column(Field("nombre", placeholder="Nombre...", id="nombre")),
                 Column(Field("apellido", placeholder="Apellido...", id="apellido"))
             ),
-            Field("rut", placeholder="Rut...", id="rut", maxlength="9"),
+            Field("telefono", placeholder="Teléfono..."),
             Row(
                 Column(Field("direccion1", placeholder="Dirección...", id="direccion1", required=True)),
                 Column(Field("direccion2", placeholder="Departamento, casa, etc.", id="direccion2"))
                 ),
-            Field("telefono", placeholder="Teléfono..."),
             Submit("submit", "Guardar cambios")
         )
 
@@ -141,7 +140,7 @@ class CambiarFotoForm(forms.ModelForm):
     def save(self):
         oldUsr = user.objects.get(rut=self.instance.rut)
         imagen_antigua = oldUsr.imagen.path if oldUsr.imagen else None
-        imagen_nueva = self.cleaned_data.get("imagen")
+        imagen_nueva = self.cleaned_data.get("imagen") if len(self.cleaned_data.get("imagen").name.split("/")) == 1 else None
         if imagen_nueva and imagen_antigua:
             print("Imagen nueva y antigua")
             print(imagen_nueva.name, os.path.basename(imagen_antigua))
@@ -155,7 +154,7 @@ class CambiarFotoForm(forms.ModelForm):
     
 class EditarUsuarioAdminForm(EditarUsuarioForm):
     class Meta(EditarUsuarioForm.Meta):
-        fields = EditarUsuarioForm.Meta.fields + ['is_staff', 'is_superuser', 'imagen']
+        fields = EditarUsuarioForm.Meta.fields + ['rut','is_staff', 'is_superuser', 'imagen']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -195,3 +194,19 @@ class EditarUsuarioAdminForm(EditarUsuarioForm):
                     os.remove(imagen_antigua)
         usuario = super().save()
         return usuario
+    
+class CambiarClaveForm(PasswordChangeForm):
+    new_password1 = forms.CharField(label="Nueva contraseña", widget=forms.PasswordInput())
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = "cambiar-contrasena"
+        self.helper.form_class = "needs-validation card-body"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.layout = Layout(
+            Field("old_password", placeholder="Contraseña actual...", id="old_password"),
+            Field("new_password1", placeholder="Nueva contraseña...", id="password1"),
+            Field("new_password2", placeholder="Repite la nueva contraseña...", id="password2"),
+            Submit("submit", "Cambiar contraseña")
+        )

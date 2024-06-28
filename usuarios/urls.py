@@ -7,5 +7,7 @@ urlpatterns = [
     path('perfil/', views.perfil, name="perfil"),
     path('agregar-usuario/', views.AgregarUsuario.as_view(), name='agregar-usuario'),
     path('delete-user/<pk>/', views.EliminarUsuario.as_view(), name='delete-user'),
-    path('modificar-usuario/<pk>/', views.ModificarUsuario.as_view(), name='modificar-usuario')
+    path('modificar-usuario/<pk>/', views.ModificarUsuario.as_view(), name='modificar-usuario'),
+    path('modificar-perfil/<pk>/', views.ModificarPerfil.as_view(), name='modificar-perfil'),
+    path('cambiar-contrasena/', views.CambiarClaveView.as_view(), name='cambiar-contrasena'),
 ]

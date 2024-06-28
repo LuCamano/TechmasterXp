@@ -6,27 +6,29 @@
 {% block title %}Administración{% endblock %}
 
 {% block content %}
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs nav-fill mb-3" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a href="{% url "listado_productos" %}" class="nav-link" id="productos-tab"
-                type="button" aria-selected="false">
-                Productos
-            </a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a href="{% url "listado_usuarios" %}" class="nav-link" id="usuarios-tab"
-                type="button" aria-selected="false">
-                Usuarios
-            </a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a href="{% url "listado_pedidos" %}" class="nav-link active" id="pedidos-tab"
-                type="button" aria-selected="true">
-                Pedidos
-            </a>
-        </li>
-    </ul>
+    {% if request.user.is_superuser and request.user.is_staff %}
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-fill mb-3" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a href="{% url "listado_productos" %}" class="nav-link" id="productos-tab"
+                    type="button" aria-selected="false">
+                    Productos
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url "listado_usuarios" %}" class="nav-link" id="usuarios-tab"
+                    type="button" aria-selected="false">
+                    Usuarios
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url "listado_pedidos" %}" class="nav-link active" id="pedidos-tab"
+                    type="button" aria-selected="true">
+                    Pedidos
+                </a>
+            </li>
+        </ul>
+    {% endif %}
     <div class="col-12">
         {% for message in messages %}
             <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %} alert-dismissible fade show" role="alert">

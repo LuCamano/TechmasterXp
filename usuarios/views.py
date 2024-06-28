@@ -2,9 +2,10 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from .forms import LoginForm, RegistroForm, RegistroAdminForm, CambiarFotoForm, EditarUsuarioAdminForm, EditarUsuarioForm
+from .forms import LoginForm, RegistroForm, RegistroAdminForm, CambiarFotoForm, EditarUsuarioAdminForm, EditarUsuarioForm, CambiarClaveForm
 from django.contrib import messages
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib.auth.views import PasswordChangeView
 
 # Create your views here.
 def login_view(request):
@@ -39,8 +40,10 @@ def registro(request):
         form = RegistroForm()
     return render(request, "registro.html", {"form": form})
 
+@login_required
 def perfil(request):
     form = CambiarFotoForm()
+    ClaveForm = CambiarClaveForm(request.user)
     if request.method == "POST":
         form = CambiarFotoForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -49,7 +52,7 @@ def perfil(request):
         else:
             messages.warning(request, "No se pudo actualizar la foto de perfil")
             return redirect("perfil")
-    return render(request, "perfil.html", {'form': form})
+    return render(request, "perfil.html", {'form': form, 'ClaveForm': ClaveForm})
 
 class AgregarUsuario(LoginRequiredMixin, CreateView):
     model = get_user_model()
@@ -119,3 +122,22 @@ class ModificarUsuario(UpdateView, LoginRequiredMixin):
             return super().post(request, *args, **kwargs)
         else:
             return redirect("index")
+        
+class ModificarPerfil(UpdateView, LoginRequiredMixin):
+    model = get_user_model()
+    form_class = EditarUsuarioForm
+    template_name = "editar usuario.html"
+    success_url = "/usuarios/perfil/"
+
+    def form_valid(self, form):
+        messages.success(self.request, "Datos modificados.")
+        return super().form_valid(form)
+    
+
+class CambiarClaveView(PasswordChangeView, LoginRequiredMixin):
+    form_class = CambiarClaveForm
+    success_url = "/usuarios/perfil/"
+
+    def form_valid(self, form):
+        messages.success(self.request, "Contraseña cambiada correctamente.")
+        return super().form_valid(form)
