@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Div, Field, Row, Column
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.auth import get_user_model
+from .models import Direccion
 import os
 
 user = get_user_model()
@@ -62,7 +63,7 @@ class RegistroAdminForm(UserCreationForm):
 
     class Meta:
         model = user
-        fields = ['imagen','correo', 'rut', 'nombre', 'apellido', 'direccion1', 'direccion2', 'telefono', 'is_staff', 'is_superuser']
+        fields = ['imagen','correo', 'rut', 'nombre', 'apellido', 'is_staff', 'is_superuser']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,11 +81,6 @@ class RegistroAdminForm(UserCreationForm):
             ),
             Field("rut", placeholder="Rut...", id="rut", maxlength="9"),
             Row(
-                Field("direccion1", placeholder="Dirección...", id="direccion1", wrapper_class="col-12 col-md-6", required=True),
-                Field("direccion2", placeholder="Comuna...", id="direccion2", wrapper_class="col-12 col-md-6"),
-                ),
-            Field("telefono", placeholder="Teléfono..."),
-            Row(
                 Field("is_staff", wrapper_class="col-12 col-md-6"),
                 Field("is_superuser", wrapper_class="col-12 col-md-6")
             ),
@@ -99,7 +95,7 @@ class RegistroAdminForm(UserCreationForm):
 class EditarUsuarioForm(UserChangeForm):
     class Meta:
         model = user
-        fields = ['correo', 'nombre', 'apellido', 'direccion1', 'direccion2', 'telefono']
+        fields = ['correo', 'nombre', 'apellido']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -209,4 +205,23 @@ class CambiarClaveForm(PasswordChangeForm):
             Field("new_password1", placeholder="Nueva contraseña...", id="password1"),
             Field("new_password2", placeholder="Repite la nueva contraseña...", id="password2"),
             Submit("submit", "Cambiar contraseña")
+        )
+
+class DireccionForm(forms.ModelForm):
+    class Meta:
+        model = Direccion
+        fields = ['direccion1', 'direccion2', 'cod_postal', 'telefono']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation card-body"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.layout = Layout(
+            Field("direccion1", placeholder="Dirección...", id="direccion1", required=True),
+            Field("direccion2", placeholder="Departamento, casa, etc.", id="direccion2"),
+            Field("cod_postal", placeholder="Código postal...", id="cod_postal"),
+            Field("telefono", placeholder="Teléfono...", id="telefono"),
+            Submit("submit", "Agregar dirección")
         )

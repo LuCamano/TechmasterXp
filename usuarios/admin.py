@@ -4,4 +4,4 @@ from .models import Usuario
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ["rut", "nombre", "apellido", "correo", "telefono", "direccion1"]
+    list_display = ["rut", "nombre", "apellido", "correo"]

@@ -10,4 +10,7 @@ urlpatterns = [
     path('modificar-usuario/<pk>/', views.ModificarUsuario.as_view(), name='modificar-usuario'),
     path('modificar-perfil/<pk>/', views.ModificarPerfil.as_view(), name='modificar-perfil'),
     path('cambiar-contrasena/', views.CambiarClaveView.as_view(), name='cambiar-contrasena'),
+    path('direcciones/', views.direcciones, name='direcciones'),
+    path('direcciones/agregar', views.AgregarDireccion.as_view(), name='agregar-direccion'),
+    path('direcciones/eliminar/<pk>/', views.EliminarDireccion.as_view(), name='eliminar-direccion'),
 ]

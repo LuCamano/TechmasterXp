@@ -45,17 +45,27 @@
                         <p class="card-text"><strong>Nombre:</strong> {{ request.user.nombre }}</p>
                         <p class="card-text"><strong>Apellido:</strong> {{ request.user.apellido }}</p>
                         <p class="card-text"><strong>Rut:</strong> {{ request.user.rut }}</p>
-                        <p class="card-text"><strong>Teléfono:</strong> {{ request.user.telefono }}</p>
+                        <p class="card-text"><strong>Correo:</strong> {{ request.user.correo }}</p>
                     </div>
                     <div class="col-12 col-md-6">
-                        <p class="card-text"><strong>Correo:</strong> {{ request.user.correo }}</p>
-                        <p class="card-text"><strong>Dirección:</strong> {{ request.user.direccion1 }}</p>
-                        <p class="card-text"><strong>Dirección 2:</strong> {{ request.user.direccion2 }}</p>
+                        <h4>Direcciones registradas</h4>
+                        {% if direcciones %}
+                            <ul class="list-group" style="max-height: 200px; overflow-y: auto;">
+                                {% for direccion in direcciones %}
+                                    <li class="list-group">
+                                        <p class="card-text"><strong>{{ direccion }}</strong></p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="card-text">No hay direcciones registradas</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <div class="card-footer">
                 <a href="{% url 'modificar-perfil' request.user.rut %}" class="btn btn-primary">Modificar información</a>
+                <a href="{% url 'direcciones' %}" class="btn btn-primary">Ver o editar direcciones</a>
                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Cambiar contraseña</button>
             </div>
         </div>

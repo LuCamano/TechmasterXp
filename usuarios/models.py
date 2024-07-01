@@ -57,9 +57,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     rut = models.CharField("Rut", max_length=12, primary_key=True)
     nombre = models.CharField("Nombre", max_length=100, blank=False, null=False)
     apellido = models.CharField("Apellido", max_length=100, blank=False, null=False)
-    direccion1 = models.CharField("Dirección", help_text="(Calle, nro, comuna)", max_length=200, blank=True, null=False, default="")
-    direccion2 = models.CharField("Dirección 2", help_text="(Departamento, casa, etc.)", max_length=200, blank=True, null=True, default="")
-    telefono = PhoneNumberField(verbose_name='Teléfono', blank=True, null=True, default="", region="CL")
     imagen = models.ImageField("Imagen", upload_to="usuarios/", blank=True, null=True)
     is_staff = models.BooleanField("Tipo de usuario", default=False, choices=((True, "Empleado"), (False, "Cliente")))
     is_superuser = models.BooleanField("Superusuario", default=False, help_text="(Debe ser empleado para que tenga efecto)", choices=((True, "Superusuario"), (False, "No es superusuario")))
@@ -133,3 +130,16 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         if self.imagen and os.path.exists(self.imagen.path):
             os.remove(self.imagen.path)
         return super().delete(*args, **kwargs)
+    
+class Direccion(models.Model):
+    usuario = models.ForeignKey("usuarios.Usuario", verbose_name="Usuario", on_delete=models.CASCADE)
+    direccion1 = models.CharField("Dirección", max_length=255)
+    direccion2 = models.CharField("Dirección 2", max_length=255, help_text="(Departamento, casa, etc.)", blank=True, null=True)
+    cod_postal = models.CharField("Código postal", max_length=10)
+    telefono = PhoneNumberField("Teléfono", region="CL", help_text="(Ej: 912345678)")
+
+    def __str__(self):
+        if self.direccion2 is None:
+            return self.direccion1
+        else:
+            return f"{self.direccion1}, {self.direccion2}"

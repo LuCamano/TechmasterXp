@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Agregar una dirección{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Agregar una dirección</h3>
+                </div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'perfil' %}" class="btn btn-danger">Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- llamado a google maps -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXNCKw3k07Z0QLw2GOuPjajvS0psHVCX0&region=CL&language=es&libraries=places&callback=initAutocomplete"
+    defer></script>
+    <!-- Script de google maps -->
+    <script src="{% static 'js/google.maps.script.js'%}"></script>
+{% endblock %}

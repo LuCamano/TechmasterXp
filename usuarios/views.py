@@ -2,10 +2,12 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from .forms import LoginForm, RegistroForm, RegistroAdminForm, CambiarFotoForm, EditarUsuarioAdminForm, EditarUsuarioForm, CambiarClaveForm
+from .forms import LoginForm, RegistroForm, RegistroAdminForm, CambiarFotoForm, EditarUsuarioAdminForm, EditarUsuarioForm, CambiarClaveForm, DireccionForm
 from django.contrib import messages
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic import ListView
 from django.contrib.auth.views import PasswordChangeView
+from .models import Direccion
 
 # Create your views here.
 def login_view(request):
@@ -43,6 +45,7 @@ def registro(request):
 @login_required
 def perfil(request):
     form = CambiarFotoForm()
+    direcciones = Direccion.objects.filter(usuario=request.user)
     ClaveForm = CambiarClaveForm(request.user)
     if request.method == "POST":
         form = CambiarFotoForm(request.POST, request.FILES, instance=request.user)
@@ -52,7 +55,12 @@ def perfil(request):
         else:
             messages.warning(request, "No se pudo actualizar la foto de perfil")
             return redirect("perfil")
-    return render(request, "perfil.html", {'form': form, 'ClaveForm': ClaveForm})
+    context = {
+        'form': form,
+        'ClaveForm': ClaveForm,
+        'direcciones': direcciones,
+    }
+    return render(request, "perfil.html", context)
 
 class AgregarUsuario(LoginRequiredMixin, CreateView):
     model = get_user_model()
@@ -141,3 +149,26 @@ class CambiarClaveView(PasswordChangeView, LoginRequiredMixin):
     def form_valid(self, form):
         messages.success(self.request, "Contraseña cambiada correctamente.")
         return super().form_valid(form)
+    
+
+def direcciones(request):
+    direcciones = Direccion.objects.filter(usuario=request.user)
+    return render(request, "direcciones.html", {"direcciones": direcciones})
+
+class AgregarDireccion(LoginRequiredMixin, CreateView):
+    form_class = DireccionForm
+    template_name = "agregar direccion.html"
+    success_url = "/usuarios/perfil/"
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        messages.success(self.request, "Dirección agregada correctamente.")
+        return super().form_valid(form)
+
+class EliminarDireccion(LoginRequiredMixin, DeleteView):
+    model = Direccion
+    success_url = "/usuarios/perfil/"
+
+    def post(self, request, *args, **kwargs):
+        messages.success(request, "Dirección eliminada correctamente.")
+        return super().post(request, *args, **kwargs)
