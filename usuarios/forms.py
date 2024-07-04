@@ -109,11 +109,6 @@ class EditarUsuarioForm(UserChangeForm):
                 Column(Field("nombre", placeholder="Nombre...", id="nombre")),
                 Column(Field("apellido", placeholder="Apellido...", id="apellido"))
             ),
-            Field("telefono", placeholder="Teléfono..."),
-            Row(
-                Column(Field("direccion1", placeholder="Dirección...", id="direccion1", required=True)),
-                Column(Field("direccion2", placeholder="Departamento, casa, etc.", id="direccion2"))
-                ),
             Submit("submit", "Guardar cambios")
         )
 
@@ -165,11 +160,6 @@ class EditarUsuarioAdminForm(EditarUsuarioForm):
                 Column(Field("apellido", placeholder="Apellido...", id="apellido"))
             ),
             Field("rut", placeholder="Rut...", id="rut", maxlength="9", readonly=True),
-            Row(
-                Column(Field("direccion1", placeholder="Dirección...", id="direccion1", required=True)),
-                Column(Field("direccion2", placeholder="Departamento, casa, etc.", id="direccion2"))
-                ),
-            Field("telefono", placeholder="Teléfono..."),
             Row(
                 Column(Field("is_staff")),
                 Column(Field("is_superuser"))
