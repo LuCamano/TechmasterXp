@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Div, Field, Row, Column
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.auth import get_user_model
-from .models import Direccion
+from .models import Direccion, Tarjeta
 import os
 
 user = get_user_model()
@@ -224,4 +224,33 @@ class DireccionForm(forms.ModelForm):
             Field("cod_postal", placeholder="Código postal...", id="cod_postal"),
             Field("telefono", placeholder="Teléfono...", id="telefono"),
             Submit("submit", "Agregar dirección")
+        )
+
+class TarjetaForm(forms.ModelForm):
+    numero = forms.CharField(label="Número de tarjeta", widget=forms.TextInput(attrs={"maxlength":"16"}))
+    cvv = forms.CharField(label="CVV", widget=forms.PasswordInput(attrs={"maxlength":"3"}))
+    fecha_vencimiento = forms.CharField(label="Fecha de vencimiento", widget=forms.DateInput(attrs={"maxlength":"5"}))
+
+    class Meta:
+        model = Tarjeta
+        fields = ['numero', 'fecha_vencimiento', 'cvv', 'nombre']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation card-body"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.layout = Layout(
+            Field("nombre", placeholder="Nombre del titular...", id="nombre", required=True),
+            Field("numero", placeholder="Número de tarjeta...", id="tarjeta", required=True),
+            Row(
+                Column(
+                    Field("fecha_vencimiento", placeholder="mm/aa", id="fecha-expiracion", required=True)
+                ),
+                Column(
+                    Field("cvv", placeholder="123", id="cvv", required=True)
+                )
+            ),
+            Submit("submit", "Agregar tarjeta")
         )

@@ -6,44 +6,44 @@
 
 {% block content %}
     <div class="row">
-                <div class="col-12 col-md-8 mb-3">
-                    <h2>Destacado</h2>
-                    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-                        <ul class="carousel-indicators">
-                            <button data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true"
-                                aria-label="First slide"></button>
-                            <button data-bs-target="#carouselId" data-bs-slide-to="1" aria-label="Second slide"></button>
-                            <button data-bs-target="#carouselId" data-bs-slide-to="2" aria-label="Third slide"></button>
-                        </ul>
-                        <div class="carousel-inner carrusel mh-100 border rounded" role="listbox">
-                            <div class="carousel-item active">
-                                <img src="{% static 'img/EN_Banner_ASUS_Banner.jpg'%}" class="w-100 d-block"
-                                    alt="First slide" />
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{% static 'img/rtx 3070 ti.jpg'%}" class="w-100 d-block"
-                                    alt="Second slide" />
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{% static 'img/banner blanco.jpg'%}" class="w-100 d-block"
-                                    alt="Third slide" />
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+        <div class="col-12 col-md-8 mb-3">
+            <h2>Destacado</h2>
+            <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+                <ul class="carousel-indicators">
+                    <button data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true"
+                        aria-label="First slide"></button>
+                    <button data-bs-target="#carouselId" data-bs-slide-to="1" aria-label="Second slide"></button>
+                    <button data-bs-target="#carouselId" data-bs-slide-to="2" aria-label="Third slide"></button>
+                </ul>
+                <div class="carousel-inner carrusel mh-100 border rounded" role="listbox">
+                    <div class="carousel-item active">
+                        <img src="{% static 'img/EN_Banner_ASUS_Banner.jpg'%}" class="w-100 d-block"
+                            alt="First slide" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{% static 'img/rtx 3070 ti.jpg'%}" class="w-100 d-block"
+                            alt="Second slide" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{% static 'img/banner blanco.jpg'%}" class="w-100 d-block"
+                            alt="Third slide" />
                     </div>
                 </div>
-                <div class="col-12 col-md-4 mb-3">
-                    <h2>Oferta</h2>
-                    <a href="producto/1"><img src="{% static 'img/banner m_2.jpeg'%}" class="w-100 mb-3" alt="3070"></a>
-                    <a href="producto/1"><img src="{% static 'img/motherboard banner.jpg'%}" class="w-100 mb-3" alt="motherboard"></a>
-                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+            <h2>Oferta</h2>
+            <a href="#"><img src="{% static 'img/banner m_2.jpeg'%}" class="w-100 mb-3" alt="3070"></a>
+            <a href="#"><img src="{% static 'img/motherboard banner.jpg'%}" class="w-100 mb-3" alt="motherboard"></a>
+        </div>
     </div>
     <div class="row">
         <h2>Últimos agregados</h2>

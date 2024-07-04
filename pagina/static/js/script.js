@@ -290,7 +290,7 @@ function fValidarTarjeta(){
     input = $("#tarjeta")[0];
     error = $("#err_nro_tarjeta");
     VISA = /^4[0-9]{3}-?[0-9]{4}-?[0-9]{4}-?[0-9]{4}$/;
-    MASTERCARD = /^5[1-5][0-9]{2}-?[0-9]{4}-?[0-9]{4}-?[0-9]{4}$/;
+    MASTERCARD = /^(?:5[1-5][0-9]{14})$/;
     AMEX = /^3[47][0-9-]{16}$/;
     CABAL = /^(6042|6043|6044|6045|6046|5896){4}[0-9]{12}$/;
     NARANJA =   /^(589562|402917|402918|527571|527572|0377798|0377799)[0-9]*$/;
@@ -480,3 +480,13 @@ if (productsModal){
             modalBody.appendChild(p);
         });
     });};
+
+var simpleDelete = $('#simpleDelete')[0];
+if (simpleDelete){
+    simpleDelete.addEventListener('show.bs.modal', function (event) {
+        let boton = event.relatedTarget;
+        let accion = boton.dataset.accion;
+        let deleteForm = $('#deleteForm')[0];
+
+        deleteForm.action = accion;
+    });}

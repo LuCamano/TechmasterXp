@@ -64,9 +64,12 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{% url 'modificar-perfil' request.user.rut %}" class="btn btn-primary">Modificar información</a>
-                <a href="{% url 'direcciones' %}" class="btn btn-primary">Ver o editar direcciones</a>
-                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Cambiar contraseña</button>
+                <div class="d-flex flex-column flex-md-row">
+                    <a href="{% url 'modificar-perfil' request.user.rut %}" class="btn btn-primary rounded-4 p-2 mb-2 mb-md-0 mx-md-auto">Modificar información</a>
+                    <a href="{% url 'direcciones' %}" class="btn btn-primary rounded-4 p-2 mb-2 mb-md-0 mx-md-auto">Ver o editar direcciones</a>
+                    <button class="btn btn-primary rounded-4 p-2 mb-2 mb-md-0 mx-md-auto" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Cambiar contraseña</button>
+                    <a href="{% url "tarjetas" %}" class="btn btn-primary rounded-4 p-2 mb-2 mb-md-0 mx-md-auto">Medios de pago</a>
+                </div>
             </div>
         </div>
     </div>

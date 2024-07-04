@@ -140,6 +140,34 @@ class Direccion(models.Model):
 
     def __str__(self):
         if self.direccion2 is None:
-            return self.direccion1
+            return f'{self.direccion1}, {self.cod_postal}, {self.telefono}'
         else:
-            return f"{self.direccion1}, {self.direccion2}"
+            return f"{self.direccion1}, {self.direccion2}, {self.cod_postal}, {self.telefono}"
+        
+
+class Tarjeta(models.Model):
+    usuario = models.ForeignKey("usuarios.Usuario", verbose_name="Usuario", on_delete=models.CASCADE)
+    numero = models.IntegerField("Número de tarjeta", unique=True)
+    nombre = models.CharField("Nombre del titular", max_length=100)
+    fecha_vencimiento = models.CharField("Fecha de vencimiento", max_length=5, help_text="(MM/AA)")
+    cvv = models.IntegerField("CVV")
+
+    @property
+    def nroc(self):
+        return "**** **** **** " + str(self.numero)[-4:]
+    
+    @property
+    def tipo(self):
+        if str(self.numero).startswith("4"):
+            return "Visa"
+        elif str(self.numero).startswith("5"):
+            return "MasterCard"
+        elif str(self.numero).startswith("34") or str(self.numero).startswith("37"):
+            return "American Express"
+        elif str(self.numero).startswith("6011"):
+            return "Discover"
+        else:
+            return "Desconocido"
+
+    def __str__(self):
+        return f"{self.tipo} - {self.nroc} - {self.nombre}"

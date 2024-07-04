@@ -2,12 +2,12 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from .forms import LoginForm, RegistroForm, RegistroAdminForm, CambiarFotoForm, EditarUsuarioAdminForm, EditarUsuarioForm, CambiarClaveForm, DireccionForm
+from .forms import LoginForm, RegistroForm, RegistroAdminForm, CambiarFotoForm, EditarUsuarioAdminForm, EditarUsuarioForm, CambiarClaveForm, DireccionForm, TarjetaForm
 from django.contrib import messages
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView
 from django.contrib.auth.views import PasswordChangeView
-from .models import Direccion
+from .models import Direccion, Tarjeta
 
 # Create your views here.
 def login_view(request):
@@ -161,6 +161,9 @@ class AgregarDireccion(LoginRequiredMixin, CreateView):
     success_url = "/usuarios/perfil/"
 
     def form_valid(self, form):
+        if Direccion.objects.filter(usuario=self.request.user).count() >= 5:
+            messages.warning(self.request, "No puedes tener más de 5 direcciones.")
+            return redirect("direcciones")
         form.instance.usuario = self.request.user
         messages.success(self.request, "Dirección agregada correctamente.")
         return super().form_valid(form)
@@ -171,4 +174,34 @@ class EliminarDireccion(LoginRequiredMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         messages.success(request, "Dirección eliminada correctamente.")
+        return super().post(request, *args, **kwargs)
+
+class ListadoTarjetas(LoginRequiredMixin, ListView):
+    model = Tarjeta
+    template_name = "medios de pago.html"
+
+    def get_queryset(self):
+        return Tarjeta.objects.filter(usuario=self.request.user)
+    
+
+class AgregarTarjeta(LoginRequiredMixin, CreateView):
+    model = Tarjeta
+    form_class = TarjetaForm
+    template_name = "agregar tarjeta.html"
+    success_url = "/usuarios/tarjetas/"
+
+    def form_valid(self, form):
+        if Tarjeta.objects.filter(usuario=self.request.user).count() >= 5:
+            messages.warning(self.request, "No puedes tener más de 5 tarjetas.")
+            return redirect("tarjetas")
+        form.instance.usuario = self.request.user
+        messages.success(self.request, "Tarjeta agregada correctamente.")
+        return super().form_valid(form)
+    
+class EliminarTarjeta(LoginRequiredMixin, DeleteView):
+    model = Tarjeta
+    success_url = "/usuarios/tarjetas/"
+
+    def post(self, request, *args, **kwargs):
+        messages.success(request, "Tarjeta eliminada correctamente.")
         return super().post(request, *args, **kwargs)
