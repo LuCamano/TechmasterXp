@@ -281,6 +281,12 @@ class Pedido(models.Model):
         listado = ProductoPedido.objects.filter(pedido=self)
         productos = [{'nombre': pp.producto, 'cantidad': pp.cantidad} for pp in listado]
         return productos
+    
+    @property
+    def productos_formateados(self):
+        productos = self.listado_productos
+        productos_formateados = [f"{producto['nombre']} x{producto['cantidad']}" for producto in productos]
+        return productos_formateados
 
 class ProductoPedido(models.Model):
     cantidad = models.PositiveIntegerField("Cantidad", default=1)

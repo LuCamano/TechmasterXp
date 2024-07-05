@@ -71,7 +71,7 @@
 </nav>
 <div class="container-fluid bg-info">
     <div class="dropdown">
-        <a class="btn btn-outline-info p-2 rounded-2 text-center dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Productos</a>
+        <a class="btn btn-outline-info p-2 rounded-2 text-center dropdown-toggle" id="dpwn-productos" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Productos</a>
         <div class="dropdown-menu p-3">
             {% for tipo in tipos_productos %}
                 <a class="dropdown-item" href="{% url "productos" tipo %}">{{ tipo }}</a>

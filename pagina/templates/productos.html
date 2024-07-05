@@ -5,21 +5,25 @@
 {% block content %}
     <h2>{{ titulo }}</h2>
     <div class="d-grid gap-2">
-        {% for producto in productos %}
-            <div class="card col-6 col-md-3">
-                <img class="card-img-top p-2 w-100 rounded-top object-fit-scale object-fit-lg-contain" src="{{ producto.imagen.url }}" alt="Title" />
-                <div class="card-body">
-                    <h4 class="card-title">{{ producto.nombre }}</h4>
-                </div>
-                <div class="card-footer">
-                    <p class="card-text fw-bold">{{ producto.tipo }}</p>
-                    <div class="d-flex justify-content-between">
-                        <p class="fs-4 fw-medium">Precio:</p>
-                        <p class="fs-4 fw-medium">${{ producto.precio }}</p>
+        {% if productos %}
+            {% for producto in productos %}
+                <div class="card col-6 col-md-3">
+                    <img class="card-img-top p-2 w-100 rounded-top object-fit-scale object-fit-lg-contain" src="{{ producto.imagen.url }}" alt="Title" />
+                    <div class="card-body">
+                        <h4 class="card-title">{{ producto.nombre }}</h4>
                     </div>
-                    <a href="{% url "producto" producto.tipo producto.id  %}" class="btn btn-outline-info d-block">Ver más</a>
+                    <div class="card-footer">
+                        <p class="card-text fw-bold">{{ producto.tipo }}</p>
+                        <div class="d-flex justify-content-between">
+                            <p class="fs-4 fw-medium">Precio:</p>
+                            <p class="fs-4 fw-medium">${{ producto.precio }}</p>
+                        </div>
+                        <a href="{% url "producto" producto.tipo producto.id  %}" class="btn btn-outline-info d-block">Ver más</a>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <p>No hay productos disponibles para esta categoría</p>
+        {% endif %}
     </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .utils import get_subclasses, get_model, get_form
-from .models import Producto, ProductoPedido, ProductoCarrito
+from .models import Producto, ProductoPedido, ProductoCarrito, Pedido
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
@@ -68,8 +68,29 @@ class Listado_usuarios(LoginRequiredMixin, ListView):
 def listado_pedidos(request):
     if not request.user.is_staff:
         return redirect("index")
+    pedidos = Pedido.objects.all()
+    context = {
+        'pedidos': pedidos,
+    }
+    return render(request, "admin/listado pedidos.html", context)
 
-    return render(request, "admin/listado pedidos.html", {})
+class ActualizarPedido(LoginRequiredMixin, UpdateView):
+    model = Pedido
+    fields = ['estado']
+    template_name = "admin/actualizar pedido.html"
+    success_url = "/admin/listado-pedidos/"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect("index")
+        
+    def post(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return super().post(request, *args, **kwargs)
+        else:
+            return redirect("index")
 
 def checkout(request):
     if not request.user.is_authenticated:

@@ -461,14 +461,14 @@ var productsModal = $('#productsModal')[0];
 if (productsModal){
     productsModal.addEventListener('show.bs.modal', function (event) {
         let boton = event.relatedTarget;
-        let productos = JSON.parse(boton.getAttribute('data-products'));
+        let productos = boton.dataset.products.replace("[", "").replace("]", "").replace(/'/g, "").split(",");
 
         let modalBody = productsModal.querySelector('.modal-body');
         modalBody.textContent = "";
 
         productos.forEach(producto => {
             let p = document.createElement('p');
-            p.textContent = producto["nombre"] + " x" + producto["cantidad"];
+            p.textContent = producto;
             modalBody.appendChild(p);
         });
     });};
