@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 import os
-import uuid
 # Create your models here.
 class Producto(models.Model):
     nombre = models.CharField("Nombre", max_length=200)
@@ -224,11 +223,24 @@ class Carrito(models.Model):
         return productos
     
     @property
+    def cantidad(self):
+        cantidad = 0
+        for producto in self.productos_carrito:
+            cantidad += self.productos_carrito[producto]['cantidad']
+        return cantidad
+    
+    @property
     def total(self):
         total = 0
         for producto in self.productos_carrito:
             total += self.productos_carrito[producto]['producto'].precio * self.productos_carrito[producto]['cantidad']
         return total
+
+    def valido(self):
+        for producto in self.productos_carrito:
+            if self.productos_carrito[producto]['producto'].stock < self.productos_carrito[producto]['cantidad']:
+                return False
+        return True
 
     class Meta:
         verbose_name = "Carrito"
@@ -248,3 +260,46 @@ class ProductoCarrito(models.Model):
     class Meta:
         verbose_name = "Producto en carrito"
         verbose_name_plural = "Productos en carrito"
+
+class Pedido(models.Model):
+    usuario = models.ForeignKey("usuarios.Usuario", verbose_name="Usuario", on_delete=models.DO_NOTHING)
+    fecha = models.DateTimeField("Fecha de pedido", auto_now_add=True)
+    tarjeta = models.ForeignKey("usuarios.Tarjeta", verbose_name="Tarjeta", on_delete=models.DO_NOTHING)
+    total = models.PositiveIntegerField("Total")
+    direccion = models.ForeignKey("usuarios.Direccion", verbose_name="Dirección", on_delete=models.DO_NOTHING)
+    estado = models.CharField("Estado", max_length=50, default="En preparación", choices=[("En preparación", "En preparación"), ("Enviado", "Enviado"), ("Entregado", "Entregado"), ("Cancelado", "Cancelado")])
+
+    def __str__(self):
+        return f"Pedido {self.pk}"
+    
+    class Meta:
+        verbose_name = "Pedido"
+        verbose_name_plural = "Pedidos"
+
+    @property
+    def listado_productos(self):
+        listado = ProductoPedido.objects.filter(pedido=self)
+        productos = [{'nombre': pp.producto, 'cantidad': pp.cantidad} for pp in listado]
+        return productos
+
+class ProductoPedido(models.Model):
+    cantidad = models.PositiveIntegerField("Cantidad", default=1)
+    pedido = models.ForeignKey("pagina.Pedido", verbose_name="Pedido", on_delete=models.CASCADE)
+    
+    content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING)
+    object_id = models.PositiveIntegerField()
+    producto = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return f"{self.producto} en {self.pedido}"
+
+    class Meta:
+        verbose_name = "Producto en pedido"
+        verbose_name_plural = "Productos en pedido"
+
+    def save(self, *args, **kwargs):
+        if self.cantidad > 10:
+            self.cantidad = 10
+        super().save(*args, **kwargs)
+        self.producto.stock -= self.cantidad
+        self.producto.save()

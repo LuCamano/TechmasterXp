@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .utils import get_subclasses, get_model, get_form
-from .models import Producto
+from .models import Producto, ProductoPedido, ProductoCarrito
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
@@ -9,7 +9,8 @@ from django.contrib import messages
 from .context_processors import agregar_producto_al_carrito, quitar_producto_del_carrito
 from django.http import JsonResponse, HttpRequest
 import json
-from .context_processors import obtener_carrito
+from .context_processors import obtener_carrito, limpiar_carrito
+from .forms import PedidoForm
 
 usuario = get_user_model()
 # Create your views here.
@@ -73,7 +74,33 @@ def listado_pedidos(request):
 def checkout(request):
     if not request.user.is_authenticated:
         return redirect("registro")
-    context = {}
+    carrito = obtener_carrito(request)
+    if carrito.cantidad == 0:
+        messages.warning(request, "No hay productos en el carrito")
+        return redirect("index")
+    if request.method == "POST":
+        form = PedidoForm(request.POST, rut_usuario=request.user.rut)
+        if form.is_valid():
+            if carrito.valido():
+                form.instance.usuario = request.user
+                form.instance.total = carrito.total
+                form.save()
+                productos_carrito = ProductoCarrito.objects.filter(carrito=carrito)
+                for producto_carrito in productos_carrito:
+                    ProductoPedido.objects.create(
+                        pedido=form.instance,
+                        producto=producto_carrito.producto,
+                        cantidad=producto_carrito.cantidad,
+                        content_type=producto_carrito.content_type,
+                        object_id=producto_carrito.object_id
+                    )
+                limpiar_carrito(request)
+                return redirect("index")
+            else:
+                messages.warning(request, "Carrito inválido")
+                return redirect("checkout")
+    form = PedidoForm(rut_usuario=request.user.rut)
+    context = {'form': form}
     return render(request, "checkout.html", context)
 
 def producto(request, tipo, id):
@@ -83,6 +110,15 @@ def producto(request, tipo, id):
     camposExcluidos = ['id', 'fecha_agregado', 'descripcion', 'imagen', 'nombre']
     valores = {field.name.replace("_", " "): getattr(product, field.name) for field in campos if field.name not in camposExcluidos}
     return render(request, "producto.html",{'producto': product, 'valores': valores})
+
+def vistaProductos(request, tipo):
+    product_class = get_model(tipo)
+    productos = product_class.objects.all()
+    context = {
+        'productos': productos,
+        'titulo': product_class._meta.verbose_name_plural
+    }
+    return render(request, "productos.html", context)
 
 @login_required
 def agregarProducto(request, tipo):

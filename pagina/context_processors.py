@@ -1,7 +1,16 @@
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
-from .models import Carrito, ProductoCarrito
+from .models import Carrito, ProductoCarrito, Producto
 from django.contrib.contenttypes.models import ContentType
+from .utils import get_subclasses
+
+def tipos_productos(request: HttpRequest):
+    # Obtener todas las subclases de Producto
+    producto_subclasses = get_subclasses(Producto)
+    # Crear una lista de los nombres de las subclases
+    tipos = [subclass._meta.verbose_name for subclass in producto_subclasses]
+    # Devolver la lista de tipos en el contexto
+    return {'tipos_productos': tipos}
 
 def carrito(request: HttpRequest):
     if request.user.is_authenticated:

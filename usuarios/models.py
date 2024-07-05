@@ -143,7 +143,12 @@ class Direccion(models.Model):
             return f'{self.direccion1}, {self.cod_postal}, {self.telefono}'
         else:
             return f"{self.direccion1}, {self.direccion2}, {self.cod_postal}, {self.telefono}"
-        
+    
+    def get_direccion(self):
+        if self.direccion2 is None:
+            return f'{self.direccion1}, {self.cod_postal}'
+        else:
+            return f"{self.direccion1}, {self.direccion2}, {self.cod_postal}"
 
 class Tarjeta(models.Model):
     usuario = models.ForeignKey("usuarios.Usuario", verbose_name="Usuario", on_delete=models.CASCADE)

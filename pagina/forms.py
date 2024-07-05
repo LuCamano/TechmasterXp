@@ -1,5 +1,6 @@
 from django import forms
-from .models import Producto, Cooler, Fabricante, Marca, Tarjeta_Grafica, FuenteAlimentacion, Gabinete, GPU, HDD, MemoriaRam, PlacaBase, Procesador, SSD, Socket
+from .models import Producto, Cooler, Fabricante, Marca, Tarjeta_Grafica, FuenteAlimentacion, Gabinete, GPU, HDD, MemoriaRam, PlacaBase, Procesador, SSD, Socket, Pedido
+from usuarios.models import Tarjeta, Direccion
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 import os
@@ -107,3 +108,24 @@ class SSDForm(ProductoForm):
     class Meta(ProductoForm.Meta):
         model = SSD
         fields = ProductoForm.Meta.fields + ['capacidad', 'lectura', 'escritura', 'formato', 'interfaz']
+
+class PedidoForm(forms.ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ['direccion', 'tarjeta']
+    
+    def __init__(self, *args, **kwargs):
+        usuario = kwargs.pop("rut_usuario")
+        super().__init__(*args, **kwargs)
+        self.fields["tarjeta"].queryset = Tarjeta.objects.filter(usuario=usuario)
+        self.fields["direccion"].queryset = Direccion.objects.filter(usuario=usuario)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation"
+        self.helper.form_id = "form-pedido"
+        self.helper.attrs = {"novalidate": ""}
+        for campo in self.fields:
+            self.fields[campo].widget.attrs["placeholder"] = self.fields[campo].label + "..."
+    
+    def save(self):
+        return super().save()

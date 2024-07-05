@@ -326,11 +326,9 @@ function luhn(value) {
 
 $("#tarjeta").on("input", fValidarTarjeta);
 
-
-$("#boton-pagar").on("click", function () {
-    document.getElementById("metodo-pago").dispatchEvent(new Event('submit'));
-    document.getElementById("datos-facturacion").dispatchEvent(new Event('submit'));
-});
+/* $("#boton-pagar").on("click", function () {
+    document.getElementById("form-pedido").dispatchEvent(new Event('submit'));
+}); */
 
 $("#cvv").on("input", function () {
     input = this;

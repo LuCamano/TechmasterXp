@@ -14,7 +14,10 @@
             <h4>Enlaces</h4>
             <ul>
                 <li><a href="{% url "index" %}">Inicio</a></li>
-                <li><a href="{% url "registro" %}">Registro</a></li>
+                <li><a href="#">Productos</a></li>
+                {% if not request.user.is_authenticated %}
+                    <li><a href="{% url "registro" %}">Registro</a></li>
+                {% endif %}
             </ul>
         </div>
         <div class="col-12 col-md-4 mx-auto p-3">
