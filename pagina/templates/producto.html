@@ -16,7 +16,7 @@
             {% endfor %}
         </div>
         <div class="col-12 col-md-4 ms-auto">
-            <form class="d-flex flex-column justify-content-center">
+            <div class="d-flex flex-column justify-content-center">
                 <div class="mb-3 col-6 justify-self-center">
                     <label for="cantidad-producto" class="form-label">Cantidad</label>
                     <div class="input-group rounded-pill">
@@ -25,8 +25,11 @@
                         <button class="btn btn-outline-info rounded-end-pill" type="button" id="boton-incrementar">+</button>
                     </div>
                 </div>
-                <button type="submit" class="w-50 btn btn-outline-dark">Agregar al carrito</button>
-            </form>
+                {% csrf_token %}
+                <a role="button" id="agregarAlCarrito" data-producto="{{ producto.pk }}" 
+                data-tipo="{{ producto.tipo }}" class="w-50 btn btn-outline-dark"
+                data-bs-toggle="offcanvas" href="#offcanvasCarrito" >Agregar al carrito</a>
+            </div>
         </div>
     </div>
     <div class="col-12">

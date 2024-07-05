@@ -8,12 +8,17 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView
 from django.contrib.auth.views import PasswordChangeView
 from .models import Direccion, Tarjeta
+from django.http import HttpRequest
+from pagina.models import Carrito
 
 # Create your views here.
 def login_view(request):
     if request.method == "POST":
         form = LoginForm(request, request.POST)
         if form.is_valid():
+            # Borrar el carrito anonimo si el usuario se loguea
+            if request.session.get("carrito_id"):
+                Carrito.objects.get(pk=request.session.get("carrito_id")).delete()
             login(request, form.get_user())
             return redirect("index")
         else:
@@ -24,7 +29,7 @@ def login_view(request):
     return render(request, "login.html", {"form": form})
 
 @login_required
-def logout_view(request):
+def logout_view(request:HttpRequest):
     logout(request)
     return redirect("index")
 

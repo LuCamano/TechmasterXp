@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 import os
+import uuid
 # Create your models here.
 class Producto(models.Model):
     nombre = models.CharField("Nombre", max_length=200)
@@ -209,3 +210,41 @@ class Socket(models.Model):
     class Meta:
         verbose_name = "Socket"
         verbose_name_plural = "Sockets"
+
+class Carrito(models.Model):
+    usuario = models.ForeignKey("usuarios.Usuario", verbose_name="Usuario", on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f"Carrito {self.pk}"
+    
+    @property
+    def productos_carrito(self):
+        productos_c = ProductoCarrito.objects.filter(carrito=self)
+        productos = {pc.producto.nombre: {'producto':pc.producto, 'cantidad':pc.cantidad} for pc in productos_c}
+        return productos
+    
+    @property
+    def total(self):
+        total = 0
+        for producto in self.productos_carrito:
+            total += self.productos_carrito[producto]['producto'].precio * self.productos_carrito[producto]['cantidad']
+        return total
+
+    class Meta:
+        verbose_name = "Carrito"
+        verbose_name_plural = "Carritos"
+
+class ProductoCarrito(models.Model):
+    cantidad = models.PositiveIntegerField("Cantidad", default=1)
+    carrito = models.ForeignKey("Carrito", verbose_name="Carrito", on_delete=models.CASCADE)
+    
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    producto = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return f"{self.producto} en {self.carrito}"
+
+    class Meta:
+        verbose_name = "Producto en carrito"
+        verbose_name_plural = "Productos en carrito"

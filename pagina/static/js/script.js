@@ -27,6 +27,9 @@ $('#direccion1').after("<div class='invalid-feedback' id='direccioninv'>Debe ing
 $('#direccion1').after("<div id='map'></div>");
 $('#tarjeta').after("<div class='invalid-feedback' id='err_nro_tarjeta'>Número de tarjeta inválido</div>");
 
+$(document).ready(function () {
+    actualizarCarrito();
+});
 
 function validar_clave(){
     const clave1 = $("#password1")[0];
@@ -217,7 +220,8 @@ $('#direccion1').on('click', validar_direccion);
 
 $('#rutPerfil').attr('disabled', true);
 
-function aumentarCantidadCarrito(id){
+// Funciones en desuso
+/* function aumentarCantidadCarrito(id){
     let identificador = id.slice(-1);
     let input = $("#cant-elem-carrito-"+identificador)[0];
     let valor = parseInt(input.value);
@@ -231,17 +235,7 @@ function disminuirCantidadCarrito(id){
     let valor = parseInt(input.value);
     let nuevovalor = Math.max(valor - 1, 1);
     input.value = nuevovalor;
-};
-
-$(".incrementar-carrito").on('click', function () {
-    let id = this.id;
-    aumentarCantidadCarrito(id);
-});
-
-$(".decrementar-carrito").on('click', function () {
-    let id = this.id;
-    disminuirCantidadCarrito(id);
-});
+}; */
 
 function aumentarCantidadProducto(){
     let input = $("#cantidad-producto")[0];
@@ -490,3 +484,138 @@ if (simpleDelete){
 
         deleteForm.action = accion;
     });}
+
+$('#agregarAlCarrito').on("click", function () {
+    let boton = $('#agregarAlCarrito')[0];
+    let productoId = boton.dataset.producto;
+    let cantidad = $("#cantidad-producto")[0].value;
+    let tipoP = boton.dataset.tipo;
+    agregarProductoAlCarrito(productoId, tipoP, cantidad);
+});
+
+function agregarProductoAlCarrito(productoId, tipoP, cantidad=1) {
+    // Obten el token CSRF
+    let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let cantidadN = parseInt(cantidad);
+    fetch('/agregar-al-carrito/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken  // Asegúrate de obtener el token CSRF correctamente
+        },
+        body: JSON.stringify({
+            'producto_id': productoId,
+            'cantidad': cantidadN,
+            'tipo_producto': tipoP
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            // Actualiza tu offcanvas del carrito aquí
+            console.log('Producto agregado');
+            actualizarCarrito();
+        } else {
+            console.log('Error al agregar el producto');
+        }
+    });
+};
+
+function quitarProductoDelCarrito(productoId, tipoP) {
+    // Obten el token CSRF
+    let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch('/quitar-del-carrito/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken  // Asegúrate de obtener el token CSRF correctamente
+        },
+        body: JSON.stringify({
+            'producto_id': productoId,
+            'tipo_producto': tipoP
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            // Actualiza tu offcanvas del carrito aquí
+            console.log('Producto eliminado');
+            actualizarCarrito();
+        } else {
+            console.log('Error al eliminar el producto');
+        }
+    });
+};
+
+/* function eliminarProductoDelCarrito(productoId) {
+    // Obten el token CSRF
+    let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch('/eliminar-del-carrito/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken  // Asegúrate de obtener el token CSRF correctamente
+        },
+        body: JSON.stringify({
+            'producto_id': productoId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            // Actualiza tu offcanvas del carrito aquí
+            console.log('Producto eliminado');
+            actualizarCarrito();
+        } else {
+            console.log('Error al eliminar el producto');
+        }
+    });
+}; */
+
+function actualizarCarrito(){
+    $.ajax({
+        url: "/obtener-carrito/",
+        method: "GET",
+        success: function (data) {
+            let contenidoCarrito = $("#contenidoCarrito");
+            let totalDelCarrito = $("#totalDelCarrito");
+            contenidoCarrito.empty();
+            totalDelCarrito.text(data.total);
+            data.productos.forEach(producto => {
+                contenidoCarrito.append(
+                    `<div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <a href="/producto/${producto.tipo}/${producto.pk}/"><img src="${producto.imagen}" class="w-100 h-100 object-fit-scale object-fit-lg-contain rounded" alt="Iamgen del producto"></a>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body d-flex flex-column flex-md-row">
+                                    <div class="col-12 col-md-8">
+                                        <a class="text-decoration-none" href="/producto/${producto.tipo}/${producto.pk}/"><h5 class="card-title">${producto.nombre}</h5></a>
+                                        <p class="card-text">${producto.tipo}</p>
+                                        <p class="card-text">Precio: $ ${producto.precio}</p>
+                                    </div>
+                                    <div class="d-flex flex-md-column col-7 col-md-4 justify-content-between">
+                                        <button type="button" data-producto="${producto.pk}" data-tipo="${producto.tipo}" class="btn btn-warning aumentar-carrito">+</button>
+                                        <input class="form-control text-center mx-auto" type="number" value="${producto.cantidad}" readonly>
+                                        <button type="button" data-producto="${producto.pk}" data-tipo="${producto.tipo}" class="btn btn-warning disminuir-carrito">-</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                )
+            });
+        }
+    });
+
+    $('#contenidoCarrito').off('click').on('click', '.aumentar-carrito', function() {
+        let boton = $(this);
+        agregarProductoAlCarrito(boton.data('producto'), boton.data('tipo'));
+    });
+
+    $('#contenidoCarrito').on('click', '.disminuir-carrito', function() {
+        let boton = $(this);
+        quitarProductoDelCarrito(boton.data('producto'), boton.data('tipo'));
+    });
+}

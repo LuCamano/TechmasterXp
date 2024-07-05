@@ -1,52 +1,18 @@
 from django.shortcuts import render, redirect
-from .models import *
+from .utils import get_subclasses, get_model, get_form
+from .models import Producto
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.contrib.auth import get_user_model
-from .forms import *
 from django.contrib import messages
+from .context_processors import agregar_producto_al_carrito, quitar_producto_del_carrito
+from django.http import JsonResponse, HttpRequest
+import json
+from .context_processors import obtener_carrito
 
 usuario = get_user_model()
 # Create your views here.
-def get_subclasses(cls):
-    subclasses = set()
-    work = [cls]
-    while work:
-        parent = work.pop()
-        for child in parent.__subclasses__():
-            if child not in subclasses:
-                subclasses.add(child)
-                work.append(child)
-    return subclasses
-
-def get_form(tipo):
-    form_dict = {
-        "Tarjeta Gráfica": Tarjeta_GraficaForm,
-        "Procesador": ProcesadorForm,
-        "Memoria": MemoriaRamForm,
-        "Disco Duro": HDDForm,
-        "SSD": SSDForm,
-        "Fuente de Alimentación": FuenteAlimentacionForm,
-        "Gabinete": GabineteForm,
-        "Placa Base": PlacaBaseForm,
-        "Cooler": CoolerForm,
-    }
-    return form_dict.get(tipo, None)
-
-def get_model(tipo):
-    model_dict = {
-        "Tarjeta Gráfica": Tarjeta_Grafica,
-        "Procesador": Procesador,
-        "Memoria": MemoriaRam,
-        "Disco Duro": HDD,
-        "SSD": SSD,
-        "Fuente de Alimentación": FuenteAlimentacion,
-        "Gabinete": Gabinete,
-        "Placa Base": PlacaBase,
-        "Cooler": Cooler
-    }
-    return model_dict.get(tipo, None)
 
 def index(request):
     producto_subclasses = get_subclasses(Producto)
@@ -174,3 +140,48 @@ def eliminarProducto(request, pk, tipo):
 
     messages.success(request, "Producto eliminado exitosamente")
     return redirect("listado_productos")
+
+def agregarAlCarrito(request:HttpRequest):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            producto_id = data.get('producto_id')
+            cantidad = data.get('cantidad')
+            tipo = data.get('tipo_producto')
+
+            if producto_id:
+                producto_model = get_model(tipo)
+                agregar_producto_al_carrito(request, producto_id, producto_model, cantidad)
+                return JsonResponse({'success': True})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+def quitarDelCarrito(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            producto_id = data.get('producto_id')
+            tipo = data.get('tipo_producto')
+            if producto_id:
+                producto_model = get_model(tipo)
+                quitar_producto_del_carrito(request, producto_id, producto_model)
+                return JsonResponse({'success': True})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+    return JsonResponse({'success': False})
+
+def obtenerCarrito(request):
+    carrito = obtener_carrito(request)
+    productos = carrito.productos_carrito
+    productos_serializados = []
+    for producto in productos:
+        productos_serializados.append({
+            'tipo': productos[producto]['producto'].tipo,
+            'pk': productos[producto]['producto'].pk,
+            'nombre': productos[producto]['producto'].nombre,
+            'imagen': productos[producto]['producto'].imagen.url,
+            'precio': productos[producto]['producto'].precio,
+            'cantidad': productos[producto]['cantidad']
+        })
+    return JsonResponse({'productos': productos_serializados, 'total': carrito.total})
