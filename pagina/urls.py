@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -12,8 +12,10 @@ urlpatterns = [
     path('admin/actualizar-pedido/<pk>/', views.ActualizarPedido.as_view(), name="actualizar-pedido"),
     path('agregar-producto/<tipo>/', views.agregarProducto, name="agregar-producto"),
     path('checkout/', views.checkout, name="checkout"),
+    path('exito/', views.pedidoRealizado, name="pedido-realizado"),
     path('producto/<tipo>/<id>/', views.producto, name="producto"),
     path('productos/<tipo>/', views.vistaProductos, name="productos"),
+    # re_path(r'^productos-todos/(?P<busqueda>.*)/$', views.todosLosProductos, name="todos-los-productos"),
     path('modificar-producto/<tipo>/<pk>/', views.editarProducto, name="modificar-producto"),
     path('delete-product/<pk>/<tipo>/', views.eliminarProducto, name="delete-product"),
     path('agregar-al-carrito/', views.agregarAlCarrito, name="agregar-al-carrito"),

@@ -58,6 +58,7 @@ def perfil(request):
     form = CambiarFotoForm()
     direcciones = Direccion.objects.filter(usuario=request.user)
     ClaveForm = CambiarClaveForm(request.user)
+    pedidos = request.user.pedido_set.all()
     if request.method == "POST":
         form = CambiarFotoForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -70,6 +71,7 @@ def perfil(request):
         'form': form,
         'ClaveForm': ClaveForm,
         'direcciones': direcciones,
+        'pedidos': pedidos
     }
     return render(request, "perfil.html", context)
 

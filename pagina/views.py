@@ -116,13 +116,16 @@ def checkout(request):
                         object_id=producto_carrito.object_id
                     )
                 limpiar_carrito(request)
-                return redirect("index")
+                return redirect("pedido-realizado")
             else:
                 messages.warning(request, "Carrito inválido")
                 return redirect("checkout")
     form = PedidoForm(rut_usuario=request.user.rut)
     context = {'form': form}
     return render(request, "checkout.html", context)
+
+def pedidoRealizado(request):
+    return render(request, "pedido realizado.html")
 
 def producto(request, tipo, id):
     product_class = get_model(tipo)
@@ -140,6 +143,25 @@ def vistaProductos(request, tipo):
         'titulo': product_class._meta.verbose_name_plural
     }
     return render(request, "productos.html", context)
+
+# def todosLosProductos(request, busqueda=None):
+#     producto_subclasses = get_subclasses(Producto)
+#     all_products = []
+
+#     if busqueda:
+#         for subclass in producto_subclasses:
+#             productos = subclass.objects.filter(nombre__icontains=busqueda)
+#             all_products.extend(productos)
+#     else:
+#         for subclass in producto_subclasses:
+#             productos = subclass.objects.all()
+#             all_products.extend(productos)
+    
+#     context = {
+#         'productos': all_products,
+#         'titulo': "Todos los productos"
+#     }
+#     return render(request, "productos.html", context)
 
 @login_required
 def agregarProducto(request, tipo):

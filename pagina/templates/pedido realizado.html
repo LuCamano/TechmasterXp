@@ -1,0 +1,17 @@
+{% extends "layouts/checkout base.html" %}
+
+{% block title %}Compra realizada{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center">¡Compra realizada!</h1>
+                <p class="text-center">Tu pedido ha sido realizado con éxito.</p>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'index' %}" class="btn btn-primary">Volver a la tienda</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

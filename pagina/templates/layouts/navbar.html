@@ -10,14 +10,14 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavId">
-            <form class="d-flex my-2 ms-auto my-lg-0">
+            {% comment %} <form class="d-flex my-2 ms-auto my-lg-0" action="/productos-todos/" method="get">
                 <div class="input-group">
-                    <input class="form-control ms-sm-2" type="text" placeholder="Búsqueda" />
+                    <input class="form-control ms-sm-2" name="busqueda" type="text" placeholder="Búsqueda" />
                     <button class="btn btn-dark" type="submit">
                         Buscar
                     </button>
                 </div>
-            </form>
+            </form> {% endcomment %}
             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                 {% if request.user.is_authenticated and request.user.is_staff %}
                     <li class="nav-item">
