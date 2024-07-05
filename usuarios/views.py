@@ -10,6 +10,7 @@ from django.contrib.auth.views import PasswordChangeView
 from .models import Direccion, Tarjeta
 from django.http import HttpRequest
 from pagina.models import Carrito
+from pagina.context_processors import obtener_carrito
 
 # Create your views here.
 def login_view(request):
@@ -18,7 +19,9 @@ def login_view(request):
         if form.is_valid():
             # Borrar el carrito anonimo si el usuario se loguea
             if request.session.get("carrito_id"):
-                Carrito.objects.get(pk=request.session.get("carrito_id")).delete()
+                carrito = Carrito.objects.get(pk=request.session.get("carrito_id"))
+                if not carrito.usuario:
+                    carrito.delete()
             login(request, form.get_user())
             return redirect("index")
         else:
@@ -38,6 +41,9 @@ def registro(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             form.save()
+            carrito = obtener_carrito(request)
+            if not carrito.usuario:
+                Carrito.objects.filter(pk=carrito.pk).update(usuario=form.instance)
             messages.success(request, "Usuario registrado correctamente")
             return redirect("login")
         else:

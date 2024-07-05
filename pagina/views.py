@@ -71,7 +71,10 @@ def listado_pedidos(request):
     return render(request, "admin/listado pedidos.html", {})
 
 def checkout(request):
-    return render(request, "checkout.html",{})
+    if not request.user.is_authenticated:
+        return redirect("registro")
+    context = {}
+    return render(request, "checkout.html", context)
 
 def producto(request, tipo, id):
     product_class = get_model(tipo)
