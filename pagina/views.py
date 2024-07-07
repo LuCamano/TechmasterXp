@@ -88,7 +88,11 @@ class ActualizarPedido(LoginRequiredMixin, UpdateView):
         
     def post(self, request, *args, **kwargs):
         if request.user.is_staff:
-            return super().post(request, *args, **kwargs)
+            try:
+                return super().post(request, *args, **kwargs)
+            except Exception as e:
+                messages.warning(request, "No se pudo actualizar el pedido")
+                return redirect("listado_pedidos")
         else:
             return redirect("index")
 
@@ -99,27 +103,28 @@ def checkout(request):
     if carrito.cantidad == 0:
         messages.warning(request, "No hay productos en el carrito")
         return redirect("index")
-    if request.method == "POST":
-        form = PedidoForm(request.POST, rut_usuario=request.user.rut)
-        if form.is_valid():
-            if carrito.valido():
+    try:
+        if request.method == "POST":
+            form = PedidoForm(request.POST, rut_usuario=request.user.rut)
+            if form.is_valid():
                 form.instance.usuario = request.user
                 form.instance.total = carrito.total
-                form.save()
+                pedido = form.save(commit=False)
                 productos_carrito = ProductoCarrito.objects.filter(carrito=carrito)
                 for producto_carrito in productos_carrito:
                     ProductoPedido.objects.create(
-                        pedido=form.instance,
+                        pedido=pedido,
                         producto=producto_carrito.producto,
                         cantidad=producto_carrito.cantidad,
                         content_type=producto_carrito.content_type,
                         object_id=producto_carrito.object_id
                     )
+                pedido.save()
                 limpiar_carrito(request)
                 return redirect("pedido-realizado")
-            else:
-                messages.warning(request, "Carrito inválido")
-                return redirect("checkout")
+    except Exception as e:
+        messages.warning(request, str(e))
+        return redirect("checkout")
     form = PedidoForm(rut_usuario=request.user.rut)
     context = {'form': form}
     return render(request, "checkout.html", context)
@@ -199,14 +204,18 @@ def editarProducto(request, tipo, pk):
         raise ValueError(f"Formulario no encontrado para el tipo {tipo}")
     
     if request.method == "POST":
-        form = form_class(request.POST, request.FILES, instance=prod)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Producto modificado exitosamente")
-            return redirect("listado_productos")
-        else:
+        try:
+            form = form_class(request.POST, request.FILES, instance=prod)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Producto modificado exitosamente")
+                return redirect("listado_productos")
+            else:
+                messages.warning(request, "Error al modificar el producto")
+                return redirect("modificar-producto", tipo=tipo, pk=pk)
+        except:
             messages.warning(request, "Error al modificar el producto")
-            return redirect("modificar-producto", tipo=tipo, pk=pk)
+            return redirect("lista_productos")
     else:
         form = form_class(instance=prod)
     return render(request, "admin/formulario modificar admin.html", {'form':form, 'tipo':tipo})

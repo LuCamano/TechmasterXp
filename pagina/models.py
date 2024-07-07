@@ -236,12 +236,6 @@ class Carrito(models.Model):
             total += self.productos_carrito[producto]['producto'].precio * self.productos_carrito[producto]['cantidad']
         return total
 
-    def valido(self):
-        for producto in self.productos_carrito:
-            if self.productos_carrito[producto]['producto'].stock < self.productos_carrito[producto]['cantidad']:
-                return False
-        return True
-
     class Meta:
         verbose_name = "Carrito"
         verbose_name_plural = "Carritos"
@@ -262,11 +256,11 @@ class ProductoCarrito(models.Model):
         verbose_name_plural = "Productos en carrito"
 
 class Pedido(models.Model):
-    usuario = models.ForeignKey("usuarios.Usuario", verbose_name="Usuario", on_delete=models.DO_NOTHING)
+    usuario = models.ForeignKey("usuarios.Usuario", verbose_name="Usuario", on_delete=models.PROTECT)
     fecha = models.DateTimeField("Fecha de pedido", auto_now_add=True)
-    tarjeta = models.ForeignKey("usuarios.Tarjeta", verbose_name="Tarjeta", on_delete=models.DO_NOTHING)
+    tarjeta = models.ForeignKey("usuarios.Tarjeta", verbose_name="Tarjeta", on_delete=models.PROTECT)
     total = models.PositiveIntegerField("Total")
-    direccion = models.ForeignKey("usuarios.Direccion", verbose_name="Dirección", on_delete=models.DO_NOTHING)
+    direccion = models.ForeignKey("usuarios.Direccion", verbose_name="Dirección", on_delete=models.PROTECT)
     estado = models.CharField("Estado", max_length=50, default="En preparación", choices=[("En preparación", "En preparación"), ("Enviado", "Enviado"), ("Entregado", "Entregado"), ("Cancelado", "Cancelado")])
 
     def __str__(self):
@@ -292,7 +286,7 @@ class ProductoPedido(models.Model):
     cantidad = models.PositiveIntegerField("Cantidad", default=1)
     pedido = models.ForeignKey("pagina.Pedido", verbose_name="Pedido", on_delete=models.CASCADE)
     
-    content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING)
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
     object_id = models.PositiveIntegerField()
     producto = GenericForeignKey('content_type', 'object_id')
 
@@ -306,6 +300,8 @@ class ProductoPedido(models.Model):
     def save(self, *args, **kwargs):
         if self.cantidad > 10:
             self.cantidad = 10
-        super().save(*args, **kwargs)
+        if self.producto.stock < self.cantidad:
+            raise Exception(f"No hay suficiente stock de {self.producto.nombre} para realizar la compra. Stock actual: {self.producto.stock}, cantidad solicitada: {self.cantidad}")
         self.producto.stock -= self.cantidad
         self.producto.save()
+        super().save(*args, **kwargs)

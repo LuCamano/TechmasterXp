@@ -127,5 +127,3 @@ class PedidoForm(forms.ModelForm):
         for campo in self.fields:
             self.fields[campo].widget.attrs["placeholder"] = self.fields[campo].label + "..."
     
-    def save(self):
-        return super().save()
