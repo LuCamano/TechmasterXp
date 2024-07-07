@@ -144,24 +144,24 @@ def vistaProductos(request, tipo):
     }
     return render(request, "productos.html", context)
 
-# def todosLosProductos(request, busqueda=None):
-#     producto_subclasses = get_subclasses(Producto)
-#     all_products = []
-
-#     if busqueda:
-#         for subclass in producto_subclasses:
-#             productos = subclass.objects.filter(nombre__icontains=busqueda)
-#             all_products.extend(productos)
-#     else:
-#         for subclass in producto_subclasses:
-#             productos = subclass.objects.all()
-#             all_products.extend(productos)
+def todosLosProductos(request):
+    producto_subclasses = get_subclasses(Producto)
+    all_products = []
+    busqueda = request.GET.get("busqueda")
+    if busqueda:
+        for subclass in producto_subclasses:
+            productos = subclass.objects.filter(nombre__icontains=busqueda)
+            all_products.extend(productos)
+    else:
+        for subclass in producto_subclasses:
+            productos = subclass.objects.all()
+            all_products.extend(productos)
     
-#     context = {
-#         'productos': all_products,
-#         'titulo': "Todos los productos"
-#     }
-#     return render(request, "productos.html", context)
+    context = {
+        'productos': all_products,
+        'titulo': "Todos los productos"
+    }
+    return render(request, "productos.html", context)
 
 @login_required
 def agregarProducto(request, tipo):

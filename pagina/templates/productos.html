@@ -4,11 +4,11 @@
 
 {% block content %}
     <h2>{{ titulo }}</h2>
-    <div class="d-grid gap-2">
+    <div class="row">
         {% if productos %}
             {% for producto in productos %}
-                <div class="card col-6 col-md-3">
-                    <img class="card-img-top p-2 w-100 rounded-top object-fit-scale object-fit-lg-contain" src="{{ producto.imagen.url }}" alt="Title" />
+                <div class="card col-6 col-md-3 mb-3">
+                    <img class="card-img-top p-2 w-100 rounded-top object-fit-scale object-fit-lg-contain" src="{{ producto.imagen.url }}" alt="Title"/>
                     <div class="card-body">
                         <h4 class="card-title">{{ producto.nombre }}</h4>
                     </div>
