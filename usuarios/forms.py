@@ -212,7 +212,7 @@ class DireccionForm(forms.ModelForm):
             Field("direccion1", placeholder="Dirección...", id="direccion1", required=True),
             Field("direccion2", placeholder="Departamento, casa, etc.", id="direccion2"),
             Field("cod_postal", placeholder="Código postal...", id="cod_postal"),
-            Field("telefono", placeholder="Teléfono...", id="telefono"),
+            Field("telefono", placeholder="Teléfono...", id="telefono", maxlength="9"),
             Submit("submit", "Agregar dirección")
         )
 

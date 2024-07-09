@@ -2,7 +2,7 @@ from django import forms
 from .models import Producto, Cooler, Fabricante, Marca, Tarjeta_Grafica, FuenteAlimentacion, Gabinete, GPU, HDD, MemoriaRam, PlacaBase, Procesador, SSD, Socket, Pedido
 from usuarios.models import Tarjeta, Direccion
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Layout, Field, Row, Column, HTML, Div
 import os
 
 class ProductoForm(forms.ModelForm):
@@ -20,14 +20,20 @@ class ProductoForm(forms.ModelForm):
         for campo in self.fields:
             self.fields[campo].widget.attrs["placeholder"] = self.fields[campo].label + "..."
 
-    def save(self):
-        oldProdct = self.Meta.model.objects.get(pk=self.instance.pk)
+    def save(self, commit=True):
+        oldProdct = self.Meta.model.objects.get(pk=self.instance.pk) if self.instance.pk else None
         #Obtener las rutas de los archivos antiguos
-        imagen_antigua = oldProdct.imagen.path if oldProdct.imagen else None
-        descripcion_antigua = oldProdct.descripcion.path if oldProdct.descripcion else None
+        if oldProdct:
+            imagen_antigua = oldProdct.imagen.path if oldProdct.imagen else None
+            descripcion_antigua = oldProdct.descripcion.path if oldProdct.descripcion else None
+            imagen_nueva = self.cleaned_data.get("imagen") if len(self.cleaned_data.get("imagen").name.split("/")) == 1 else None
+            descripcion_nueva = self.cleaned_data.get("descripcion") if len(self.cleaned_data.get("descripcion").name.split("/")) == 1 else None
+        else:
+            imagen_antigua = None
+            descripcion_antigua = None
+            imagen_nueva = self.cleaned_data.get("imagen")
+            descripcion_nueva = self.cleaned_data.get("descripcion")
         #Obtener las rutas de los archivos nuevos y si no existen, asignar None
-        imagen_nueva = self.cleaned_data.get("imagen") if len(self.cleaned_data.get("imagen").name.split("/")) == 1 else None
-        descripcion_nueva = self.cleaned_data.get("descripcion") if len(self.cleaned_data.get("descripcion").name.split("/")) == 1 else None
         #Si hay imagen nueva y antigua
         if imagen_nueva and imagen_antigua:
             #Si las rutas son diferentes
@@ -42,7 +48,7 @@ class ProductoForm(forms.ModelForm):
                 if os.path.exists(descripcion_antigua):
                     #Borrar la antigua
                     os.remove(descripcion_antigua)
-        return super().save()
+        return super().save(commit=commit)
 
 class CoolerForm(ProductoForm):
     class Meta(ProductoForm.Meta):
@@ -126,4 +132,15 @@ class PedidoForm(forms.ModelForm):
         self.helper.attrs = {"novalidate": ""}
         for campo in self.fields:
             self.fields[campo].widget.attrs["placeholder"] = self.fields[campo].label + "..."
-    
+        self.helper.layout = Layout(
+            Div(
+                Field("direccion", wrapper_class="col-11"),
+                HTML('<a href="{% url "agregar-direccion" %}" class="btn btn-outline-success p-2"><i class="bi bi-plus-circle"></i></a>'),
+                css_class="hstack gap-2"
+            ),
+            Div(
+                Field("tarjeta", wrapper_class="col-11"),
+                HTML('<a href="{% url "agregar-tarjeta" %}" class="btn btn-outline-success p-2"><i class="bi bi-plus-circle"></i></a>'),
+                css_class="hstack gap-2"
+            ),
+        )

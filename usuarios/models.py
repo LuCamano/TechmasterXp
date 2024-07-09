@@ -60,6 +60,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     imagen = models.ImageField("Imagen", upload_to="usuarios/", blank=True, null=True)
     is_staff = models.BooleanField("Tipo de usuario", default=False, choices=((True, "Empleado"), (False, "Cliente")))
     is_superuser = models.BooleanField("Superusuario", default=False, help_text="(Debe ser empleado para que tenga efecto)", choices=((True, "Superusuario"), (False, "No es superusuario")))
+    is_active = models.BooleanField("Activo", default=True)
 
     objects = UsuarioManager()
 

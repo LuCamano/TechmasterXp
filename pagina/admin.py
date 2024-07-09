@@ -62,3 +62,7 @@ class coolerAdmin(admin.ModelAdmin):
 @admin.register(Socket)
 class SocketAdmin(admin.ModelAdmin):
     list_display = ["nombre"]
+
+@admin.register(Pedido)
+class PedidoAdmin(admin.ModelAdmin):
+    list_display = ["usuario", "fecha", "total", "estado", "direccion"]

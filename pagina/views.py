@@ -46,7 +46,13 @@ def listado_productos(request):
         key=lambda producto: producto.fecha_agregado,
         reverse=True
     )
-    return render(request, "admin/listado productos.html", {'productos':productos})
+
+    tipos = [subclase().tipo for subclase in producto_subclasses]
+    context = {
+        'productos':productos,
+        'tipos':tipos
+        }
+    return render(request, "admin/listado productos.html", context)
 
 class Listado_usuarios(LoginRequiredMixin, ListView):
     model = usuario
@@ -109,8 +115,8 @@ def checkout(request):
             if form.is_valid():
                 form.instance.usuario = request.user
                 form.instance.total = carrito.total
-                pedido = form.save(commit=False)
                 productos_carrito = ProductoCarrito.objects.filter(carrito=carrito)
+                pedido = form.save()
                 for producto_carrito in productos_carrito:
                     ProductoPedido.objects.create(
                         pedido=pedido,
@@ -119,11 +125,11 @@ def checkout(request):
                         content_type=producto_carrito.content_type,
                         object_id=producto_carrito.object_id
                     )
-                pedido.save()
                 limpiar_carrito(request)
                 return redirect("pedido-realizado")
     except Exception as e:
         messages.warning(request, str(e))
+        pedido.delete()
         return redirect("checkout")
     form = PedidoForm(rut_usuario=request.user.rut)
     context = {'form': form}
@@ -222,15 +228,19 @@ def editarProducto(request, tipo, pk):
 
 @login_required
 def eliminarProducto(request, pk, tipo):
-    model = get_model(tipo)
-    prod = model.objects.get(pk=pk)
-    prod.delete()
+    try:
+        model = get_model(tipo)
+        prod = model.objects.get(pk=pk)
+        prod.delete()
 
-    if not request.user.is_staff and not request.user.is_superuser:
-        return redirect("index")
+        if not request.user.is_staff and not request.user.is_superuser:
+            return redirect("index")
 
-    messages.success(request, "Producto eliminado exitosamente")
-    return redirect("listado_productos")
+        messages.success(request, "Producto eliminado exitosamente")
+        return redirect("listado_productos")
+    except Exception as e:
+        messages.warning(request, str(e))
+        return redirect("listado_productos")
 
 def agregarAlCarrito(request:HttpRequest):
     if request.method == 'POST':

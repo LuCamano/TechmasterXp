@@ -27,6 +27,11 @@ class Producto(models.Model):
         abstract = True
 
     def delete(self, *args, **kwargs):
+        productosEnPedido = ProductoPedido.objects.all()
+        pedidosAsociados = [pp for pp in productosEnPedido if pp.producto == self]
+        cantPedidosAsociados = len(pedidosAsociados)
+        if cantPedidosAsociados > 0:
+            raise Exception(f"No se puede eliminar el producto {self.nombre} ya que tiene {cantPedidosAsociados} pedidos asociados.")
         if self.imagen and os.path.exists(self.imagen.path):
             os.remove(self.imagen.path)
         if self.descripcion and os.path.exists(self.descripcion.path):

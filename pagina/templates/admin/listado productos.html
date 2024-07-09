@@ -45,15 +45,9 @@
                 <h3>Listado de productos</h3>
                 <button class="btn btn-success rounded-4 px-3 py-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Agregar producto</button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Tarjeta Gráfica" %}">Agregar tarjeta gráfica</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Procesador" %}">Agregar Procesador</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Placa Base" %}">Agregar PlacaBase</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "SSD" %}">Agregar SSD</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Disco Duro" %}">Agregar HDD</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Memoria" %}">Agregar Memoria</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Fuente de Alimentación" %}">Agregar Fuente de Alimentacion</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Gabinete" %}">Agregar Gabinete</a></li>
-                    <li><a class="dropdown-item" href="{% url "agregar-producto" "Cooler" %}">Agregar Cooler</a></li>
+                    {% for tipoP in tipos %}
+                        <li><a class="dropdown-item" href="{% url "agregar-producto" tipoP %}">Agregar {{ tipoP }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
             <div class="card-body">

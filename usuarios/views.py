@@ -140,7 +140,11 @@ class ModificarUsuario(UpdateView, LoginRequiredMixin):
         
     def post(self, request, *args, **kwargs):
         if request.user.is_staff and request.user.is_superuser:
-            return super().post(request, *args, **kwargs)
+            try:
+                return super().post(request, *args, **kwargs)
+            except:
+                messages.warning(request, "No se pudo modificar el usuario")
+                return redirect("listado_usuarios")
         else:
             return redirect("index")
         
@@ -154,6 +158,12 @@ class ModificarPerfil(UpdateView, LoginRequiredMixin):
         messages.success(self.request, "Datos modificados.")
         return super().form_valid(form)
     
+    def post(self, request: HttpRequest, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except:
+            messages.warning(request, "No se pudo modificar los datos")
+            return redirect("perfil")
 
 class CambiarClaveView(PasswordChangeView, LoginRequiredMixin):
     form_class = CambiarClaveForm
@@ -163,6 +173,12 @@ class CambiarClaveView(PasswordChangeView, LoginRequiredMixin):
         messages.success(self.request, "Contraseña cambiada correctamente.")
         return super().form_valid(form)
     
+    def post(self, request: HttpRequest, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except:
+            messages.warning(request, "No se pudo cambiar la contraseña")
+            return redirect("perfil")
 
 def direcciones(request):
     direcciones = Direccion.objects.filter(usuario=request.user)
@@ -186,8 +202,13 @@ class EliminarDireccion(LoginRequiredMixin, DeleteView):
     success_url = "/usuarios/perfil/"
 
     def post(self, request, *args, **kwargs):
-        messages.success(request, "Dirección eliminada correctamente.")
-        return super().post(request, *args, **kwargs)
+        try:
+            resp = super().post(request, *args, **kwargs)
+            messages.success(request, "Dirección eliminada correctamente.")
+            return resp
+        except:
+            messages.warning(request, "No se pudo eliminar la dirección")
+            return redirect("direcciones")
 
 class ListadoTarjetas(LoginRequiredMixin, ListView):
     model = Tarjeta
@@ -204,17 +225,52 @@ class AgregarTarjeta(LoginRequiredMixin, CreateView):
     success_url = "/usuarios/tarjetas/"
 
     def form_valid(self, form):
-        if Tarjeta.objects.filter(usuario=self.request.user).count() >= 5:
-            messages.warning(self.request, "No puedes tener más de 5 tarjetas.")
+        try:
+            if Tarjeta.objects.filter(usuario=self.request.user).count() >= 5:
+                messages.warning(self.request, "No puedes tener más de 5 tarjetas.")
+                return redirect("tarjetas")
+            form.instance.usuario = self.request.user
+            messages.success(self.request, "Tarjeta agregada correctamente.")
+            return super().form_valid(form)
+        except:
+            messages.warning(self.request, "No se pudo agregar la tarjeta")
             return redirect("tarjetas")
-        form.instance.usuario = self.request.user
-        messages.success(self.request, "Tarjeta agregada correctamente.")
-        return super().form_valid(form)
     
 class EliminarTarjeta(LoginRequiredMixin, DeleteView):
     model = Tarjeta
     success_url = "/usuarios/tarjetas/"
 
     def post(self, request, *args, **kwargs):
-        messages.success(request, "Tarjeta eliminada correctamente.")
-        return super().post(request, *args, **kwargs)
+        try:
+            resp = super().post(request, *args, **kwargs)
+            messages.success(request, "Tarjeta eliminada correctamente.")
+            return resp
+        except:
+            messages.warning(request, "No se pudo eliminar la tarjeta")
+            return redirect("tarjetas")
+        
+def BloquearUsuario(request, rut):
+    if not request.user.is_staff and not request.user.is_superuser:
+        return redirect("index")
+    
+    usuario = get_user_model().objects.get(rut=rut)
+    if usuario.is_active:
+        usuario.is_active = False
+        usuario.save()
+        messages.success(request, "Usuario bloqueado correctamente")
+    else:
+        messages.warning(request, "El usuario ya está bloqueado")
+    return redirect("listado_usuarios")
+
+def DesbloquearUsuario(request, rut):
+    if not request.user.is_staff and not request.user.is_superuser:
+        return redirect("index")
+    
+    usuario = get_user_model().objects.get(rut=rut)
+    if not usuario.is_active:
+        usuario.is_active = True
+        usuario.save()
+        messages.success(request, "Usuario desbloqueado correctamente")
+    else:
+        messages.warning(request, "El usuario ya está desbloqueado")
+    return redirect("listado_usuarios")

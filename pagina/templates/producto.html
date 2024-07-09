@@ -8,7 +8,7 @@
     <h1 class="mt-3">{{ producto.nombre }}</h1>
     <div class="row mb-5">
         <div class="col-12 col-md-4 me-auto mb-3">
-            <img src="{{ producto.imagen.url }}" alt="ASUS ROG Nvidia GeForce RTX3050" class="object-fit-contain w-100">
+            <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}{% static "img/torre-de-pc.png" %}{% endif %}" alt="ASUS ROG Nvidia GeForce RTX3050" class="object-fit-contain w-100">
         </div>
         <div class="col-12 col-md-4 mx-auto mb-3">
             {% for campo, valor in valores.items %}
